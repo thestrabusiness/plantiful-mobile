@@ -1,10 +1,11 @@
 import React, { ReactElement, useState } from "react";
 import { StyleSheet, View, FlatList, Button, Text } from "react-native";
 import { Page } from "../components/Page";
-import PlantListItem, { Plant } from "../components/PlantListItem";
+import PlantListItem from "../components/PlantListItem";
 import { onSignOut } from "../auth";
 import { NavigationStackProp } from "react-navigation-stack";
 import { getPlants } from "../api/Api";
+import { Plant } from "../api/Types";
 
 interface Props {
   navigation: NavigationStackProp;

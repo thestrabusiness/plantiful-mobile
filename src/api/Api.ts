@@ -1,7 +1,6 @@
 import { getAuthenticationToken } from "../auth";
 import AsyncStorage from "@react-native-community/async-storage";
-import { Plant } from "../components/PlantListItem";
-import { User } from "../auth";
+import { Plant, User } from "./Types";
 
 const baseApiUrl = "http://localhost:3000/api";
 

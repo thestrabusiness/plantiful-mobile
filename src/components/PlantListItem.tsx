@@ -1,29 +1,7 @@
 import React, { ReactElement } from "react";
 import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
 import { avatarUri } from "./AvatarPlaceholder";
-
-export interface CheckIn {
-  created_at: number;
-  fertilized: boolean;
-  id: number;
-  notes: string;
-  photo_urls: string[];
-  plant_id: number;
-  watered: boolean;
-}
-
-export interface Plant {
-  avatar: string;
-  check_frequency_scalar: number;
-  check_frequency_unit: string;
-  check_ins: CheckIn[];
-  garden_id: number;
-  id: number;
-  last_watered_at: number;
-  name: string;
-  next_check_date: string;
-  overdue_for_check_in: boolean;
-}
+import { Plant } from "../api/Types";
 
 interface Props {
   plant: Plant;

@@ -1,14 +1,6 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import { signIn } from "./api/Api";
-
-interface User {
-  id: number;
-  default_garden_id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  remember_token: string;
-}
+import { User } from "./api/Types";
 
 const USER_KEY = "authentication_token";
 
