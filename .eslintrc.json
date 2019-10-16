@@ -1,12 +1,20 @@
 {
   "extends": [
-    "@thoughtbot/eslint-config",
-    "@react-native-community",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "@thoughtbot/eslint-config"
   ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true
+    }
+  },
   "rules": {
     "quotes": ["error", "double", { "avoidEscape": true }],
     "@typescript-eslint/indent": ["error", 2],
-    "array-bracket-spacing": ["error", "never"]
+    "array-bracket-spacing": ["error", "never"],
+    "space-before-function-paren": ["error", "always"]
   }
 }
