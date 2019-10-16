@@ -10,7 +10,7 @@ import {
 
 interface PageProps {
   style?: StyleProp<ViewStyle>;
-  children: JSX.Element | JSX.Element[];
+  children: ReactElement | ReactElement[];
   testID?: string;
 }
 

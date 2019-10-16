@@ -1,4 +1,5 @@
-import React, { ReactElement } from "react";
+import React from "react";
+import { ReactElement } from "react";
 import { View, Text, Button } from "react-native";
 import { onSignIn } from "../auth";
 import { NavigationStackProp } from "react-navigation-stack";

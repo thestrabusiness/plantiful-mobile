@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
 import { avatarUri } from "./AvatarPlaceholder";
 
-export interface CheckInData {
+export interface CheckIn {
   created_at: number;
   fertilized: boolean;
   id: number;
@@ -12,11 +12,11 @@ export interface CheckInData {
   watered: boolean;
 }
 
-export interface PlantData {
+export interface Plant {
   avatar: string;
   check_frequency_scalar: number;
   check_frequency_unit: string;
-  check_ins: CheckInData[];
+  check_ins: CheckIn[];
   garden_id: number;
   id: number;
   last_watered_at: number;
@@ -26,7 +26,7 @@ export interface PlantData {
 }
 
 interface Props {
-  plant: PlantData;
+  plant: Plant;
 }
 
 const windowWidth = Dimensions.get("window").width;
