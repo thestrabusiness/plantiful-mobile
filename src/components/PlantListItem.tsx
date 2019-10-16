@@ -1,6 +1,6 @@
 import React, { ReactElement } from "react";
 import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
-import { avatarUri } from "./AvatarPlaceholder";
+import { avatarUri } from "../AvatarPlaceholder";
 import { Plant } from "../api/Types";
 
 interface Props {

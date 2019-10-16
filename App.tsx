@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { checkIfSignedIn } from "./src/auth";
+import React, { useState, ReactElement } from "react";
+import { checkIfSignedIn } from "./src/Session";
 import AppNavigator from "./src/components/Router";
 import { createAppContainer } from "react-navigation";
 
-const App = () => {
+const App = (): ReactElement => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   if (!isSignedIn) {
     checkIfSignedIn().then((res: any) => setIsSignedIn(res));

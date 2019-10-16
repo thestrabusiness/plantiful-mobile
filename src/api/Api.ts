@@ -1,4 +1,4 @@
-import { getAuthenticationToken } from "../auth";
+import { getAuthenticationToken } from "../Session";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Plant, User } from "./Types";
 
@@ -51,4 +51,11 @@ const signIn = async (email: string, password: string): Promise<User> => {
   );
 };
 
-export { getPlants, signIn };
+const signOut = (): Promise<Response> => {
+  return fetch(`${baseApiUrl}/sign_out`, {
+    method: "DELETE",
+    headers: { "content-type": "application/json" },
+  });
+};
+
+export { getPlants, signIn, signOut };

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ReactElement } from "react";
 import { StyleSheet, Button, Dimensions, Text } from "react-native";
 import { Page } from "../components/Page";
-import { onSignIn } from "../auth";
+import { onSignIn } from "../Session";
 import { NavigationStackProp } from "react-navigation-stack";
 import { TextInput } from "react-native-gesture-handler";
 
