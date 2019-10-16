@@ -26,12 +26,15 @@ const getAuthenticationToken = (): Promise<string> => {
   });
 };
 
-const onSignIn = (): Promise<void> => {
-  return signIn("uncletony@example.com", "password")
-    .then((user: User): void => {
+const onSignIn = (email: string, password: string): Promise<boolean> => {
+  return signIn(email, password)
+    .then((user: User): boolean => {
       AsyncStorage.setItem(USER_KEY, user.remember_token);
+      return true;
     })
-    .catch((error: Error): void => console.error(error.message));
+    .catch((): boolean => {
+      return false;
+    });
 };
 
 const onSignOut = (): Promise<void> => AsyncStorage.removeItem(USER_KEY);
