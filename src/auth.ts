@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage";
+import { signIn } from "./api/Api";
 
 interface User {
   id: number;
@@ -11,26 +12,22 @@ interface User {
 
 const USER_KEY = "authentication_token";
 
-const onSignIn = (): Promise<void> => {
-  return fetch("http://localhost:3000/api/sessions", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      user: {
-        email: "uncletony@example.com",
-        password: "password",
-      },
-    }),
-  })
-    .then(
-      (response: Response): Promise<User> => {
-        if (response.ok) {
-          return response.json();
+const getAuthenticationToken = (): Promise<string> => {
+  return new Promise((resolve, reject): void => {
+    AsyncStorage.getItem(USER_KEY)
+      .then((token: string | null): void => {
+        if (token !== null) {
+          resolve(token);
         } else {
-          throw Error(response.statusText);
+          resolve("");
         }
-      },
-    )
+      })
+      .catch((error: any): void => reject(error));
+  });
+};
+
+const onSignIn = (): Promise<void> => {
+  return signIn("uncletony@example.com", "password")
     .then((user: User): void => {
       AsyncStorage.setItem(USER_KEY, user.remember_token);
     })
@@ -42,7 +39,7 @@ const onSignOut = (): Promise<void> => AsyncStorage.removeItem(USER_KEY);
 const checkIfSignedIn = (): Promise<void> => {
   return new Promise((resolve, reject): void => {
     AsyncStorage.getItem(USER_KEY)
-      .then((res: boolean | null): void => {
+      .then((res: string | null): void => {
         if (res !== null) {
           resolve(true);
         } else {
@@ -53,4 +50,11 @@ const checkIfSignedIn = (): Promise<void> => {
   });
 };
 
-export { onSignIn, onSignOut, checkIfSignedIn, USER_KEY };
+export {
+  onSignIn,
+  onSignOut,
+  checkIfSignedIn,
+  USER_KEY,
+  getAuthenticationToken,
+  User,
+};
