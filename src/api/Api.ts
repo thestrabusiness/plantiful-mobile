@@ -58,4 +58,32 @@ const signOut = (): Promise<Response> => {
   });
 };
 
-export { getPlants, signIn, signOut };
+const signUp = (
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+): Promise<User> => {
+  return fetch(`${baseApiUrl}/users`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      user: {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        password,
+      },
+    }),
+  }).then(
+    (response: Response): Promise<User> => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw Error(response.statusText);
+      }
+    },
+  );
+};
+
+export { getPlants, signIn, signOut, signUp };

@@ -4,6 +4,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 
 import SignIn from "../screens/SignIn";
+import SignUp from "../screens/SignUp";
 import PlantList from "../screens/PlantList";
 import { NavigationNavigator } from "react-navigation";
 
@@ -16,6 +17,13 @@ const SignedOut = createStackNavigator({
     screen: SignIn,
     navigationOptions: {
       title: "Sign In",
+      headerStyle,
+    },
+  },
+  SignUp: {
+    screen: SignUp,
+    navigationOptions: {
+      title: "Sign Up",
       headerStyle,
     },
   },

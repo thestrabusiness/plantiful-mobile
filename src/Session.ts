@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage";
-import { signIn, signOut } from "./api/Api";
+import { signIn, signOut, signUp } from "./api/Api";
 import { User } from "./api/Types";
 
 const USER_KEY = "authentication_token";
@@ -34,6 +34,22 @@ const onSignOut = async (): Promise<void> => {
   AsyncStorage.removeItem(USER_KEY);
 };
 
+const onSignUp = (
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+): Promise<boolean> => {
+  return signUp(firstName, lastName, email, password)
+    .then((user: User): boolean => {
+      AsyncStorage.setItem(USER_KEY, user.remember_token);
+      return true;
+    })
+    .catch((): boolean => {
+      return false;
+    });
+};
+
 const checkIfSignedIn = (): Promise<void> => {
   return new Promise((resolve, reject): void => {
     AsyncStorage.getItem(USER_KEY)
@@ -51,6 +67,7 @@ const checkIfSignedIn = (): Promise<void> => {
 export {
   onSignIn,
   onSignOut,
+  onSignUp,
   checkIfSignedIn,
   USER_KEY,
   getAuthenticationToken,

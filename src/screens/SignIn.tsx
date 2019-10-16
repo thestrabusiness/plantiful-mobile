@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ReactElement } from "react";
-import { StyleSheet, Button, Dimensions, Text } from "react-native";
+import { StyleSheet, Button, Dimensions, Text, View } from "react-native";
 import { Page } from "../components/Page";
 import { onSignIn } from "../Session";
 import { NavigationStackProp } from "react-navigation-stack";
@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
   signInError: {
     color: "red",
     marginBottom: 10,
+  },
+  section: {
+    marginVertical: 50,
   },
 });
 
@@ -91,6 +94,15 @@ const SignIn = (props: Props): ReactElement => {
           });
         }}
       />
+      <View style={styles.section}>
+        <Text> Don't have an account yet? </Text>
+        <Button
+          title="Sign Up"
+          onPress={(): void => {
+            navigation.navigate("SignUp");
+          }}
+        />
+      </View>
     </Page>
   );
 };
