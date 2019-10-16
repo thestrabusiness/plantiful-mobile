@@ -1,4 +1,4 @@
-export const plantData = [
+const plantData = [
   {
     avatar:
       "http://localhost:3000/rails/active_storage/representations/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBDZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--f72fb14869022071af43f3b1acb437b3c7922532/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCam9MY21WemFYcGxTU0lNTXpBd2VETXdNQVk2QmtWVSIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--62f504c5f07394267b3cfbbbdf55bd0f84ab7532/plant4.jpg",
@@ -524,3 +524,5 @@ export const plantData = [
     overdue_for_check_in: false,
   },
 ];
+
+export { plantData };

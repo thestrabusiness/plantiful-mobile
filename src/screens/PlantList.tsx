@@ -1,8 +1,14 @@
-import React from "react";
-import { StyleSheet, View, FlatList } from "react-native";
+import React, { ReactElement } from "react";
+import { StyleSheet, View, FlatList, Button } from "react-native";
 import { Page } from "../components/Page";
 import PlantListItem from "../components/PlantListItem";
 import { plantData } from "../components/DevData";
+import { onSignOut } from "../auth";
+import { NavigationStackProp } from "react-navigation-stack";
+
+interface Props {
+  navigation: NavigationStackProp;
+}
 
 const styles = StyleSheet.create({
   plantList: {
@@ -10,17 +16,26 @@ const styles = StyleSheet.create({
   },
 });
 
-const PlantList = () => {
+const PlantList = (props: Props): ReactElement => {
+  const { navigation } = props;
   return (
     <Page>
+      <Button
+        title="Sign Out"
+        onPress={(): void => {
+          onSignOut().then((): boolean => navigation.navigate("SignedOut"));
+        }}
+      />
       <View style={styles.plantList}>
         <FlatList
           contentInsetAdjustmentBehavior="automatic"
           data={plantData}
-          renderItem={({ item }) => <PlantListItem plant={item} />}
-          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }): ReactElement => (
+            <PlantListItem plant={item} />
+          )}
+          keyExtractor={(item): string => item.id.toString()}
           numColumns={3}
-          columnWrapperStyle={{ alignItems: "flex-start" }}
+          columnWrapperStyle={styles.plantList}
         />
       </View>
     </Page>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -10,20 +10,9 @@ import {
 
 interface PageProps {
   style?: StyleProp<ViewStyle>;
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
   testID?: string;
 }
-
-const Page = ({ style, children, testID }: PageProps) => (
-  <>
-    <StatusBar />
-    <SafeAreaView style={styles.container}>
-      <View style={[styles.page, style]} testID={testID}>
-        {children}
-      </View>
-    </SafeAreaView>
-  </>
-);
 
 const styles = StyleSheet.create({
   container: {
@@ -33,5 +22,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+const Page = ({ style, children, testID }: PageProps): ReactElement => (
+  <>
+    <StatusBar />
+    <SafeAreaView style={styles.container}>
+      <View style={[styles.page, style]} testID={testID}>
+        {children}
+      </View>
+    </SafeAreaView>
+  </>
+);
 
 export { Page };

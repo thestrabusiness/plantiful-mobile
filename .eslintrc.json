@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "@thoughtbot/eslint-config",
+    "@react-native-community",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "quotes": ["error", "double", { "avoidEscape": true }],
+    "@typescript-eslint/indent": ["error", 2],
+    "array-bracket-spacing": ["error", "never"]
+  }
+}
