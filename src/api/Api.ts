@@ -1,8 +1,12 @@
+import { Platform } from "react-native";
 import { getAuthenticationToken } from "../Session";
 import AsyncStorage from "@react-native-community/async-storage";
 import { Garden, User } from "./Types";
 
-const baseApiUrl = "http://localhost:3000/api";
+const baseApiUrl =
+  Platform.OS == "android"
+    ? "http://10.0.2.2:3000/api"
+    : "http://localhost:3000/api";
 
 const getGarden = async (gardenId: number = 1): Promise<Garden | void> => {
   const authToken = await getAuthenticationToken();
