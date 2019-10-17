@@ -2,10 +2,10 @@ import React, { ReactElement, useState } from "react";
 import { StyleSheet, View, FlatList, Button, Text } from "react-native";
 import { Page } from "../components/Page";
 import PlantListItem from "../components/PlantListItem";
-import { onSignOut } from "../Session";
+import { onSignOut, retrieveCurrentUser } from "../Session";
 import { NavigationStackProp } from "react-navigation-stack";
 import { getPlants } from "../api/Api";
-import { Plant } from "../api/Types";
+import { Plant, User } from "../api/Types";
 
 interface Props {
   navigation: NavigationStackProp;
@@ -18,17 +18,25 @@ const styles = StyleSheet.create({
 });
 
 const PlantList = (props: Props): ReactElement => {
-  const [plantData, setPlantData] = useState<Plant[]>([]);
+  const [plantData, setPlantData] = useState<Plant[]>();
   const { navigation } = props;
-  const gardenID = 1;
 
-  getPlants(gardenID).then((plants: Plant[] | void): void => {
-    if (plants && plants.length > plantData.length) {
-      setPlantData(plants);
+  retrieveCurrentUser().then((user: User | void): void => {
+    if (user) {
+      getPlants(user.default_garden_id).then((plants: Plant[] | void): void => {
+        if (
+          (plants && !plantData) ||
+          (plants && plantData && plants.length > plantData.length)
+        ) {
+          setPlantData(plants);
+        }
+      });
+    } else {
+      onSignOut().then((): boolean => navigation.navigate("SignedOut"));
     }
   });
 
-  if (plantData.length > 0) {
+  if (plantData && plantData.length > 0) {
     return (
       <Page>
         <Button
@@ -47,6 +55,22 @@ const PlantList = (props: Props): ReactElement => {
             keyExtractor={(item): string => item.id.toString()}
             numColumns={3}
             columnWrapperStyle={styles.plantList}
+          />
+        </View>
+      </Page>
+    );
+  } else if (plantData && plantData.length == 0) {
+    return (
+      <Page>
+        <View>
+          <Text>
+            You don't have any plants yet! Click the + to add some new friends.
+          </Text>
+          <Button
+            title="Sign Out"
+            onPress={(): void => {
+              onSignOut().then((): boolean => navigation.navigate("SignedOut"));
+            }}
           />
         </View>
       </Page>
