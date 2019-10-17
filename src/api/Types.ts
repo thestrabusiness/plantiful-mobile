@@ -21,6 +21,13 @@ interface Plant {
   overdue_for_check_in: boolean;
 }
 
+interface Garden {
+  id: number;
+  name: string;
+  owner_id: number;
+  plants: Plant[];
+}
+
 interface User {
   id: number;
   default_garden_id: number;
@@ -30,4 +37,4 @@ interface User {
   remember_token: string;
 }
 
-export { Plant, User, CheckIn };
+export { Plant, User, CheckIn, Garden };

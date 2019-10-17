@@ -1,31 +1,33 @@
 import { getAuthenticationToken } from "../Session";
 import AsyncStorage from "@react-native-community/async-storage";
-import { Plant, User } from "./Types";
+import { Garden, User } from "./Types";
 
 const baseApiUrl = "http://localhost:3000/api";
 
-const getPlants = async (gardenId: number = 1): Promise<Plant[] | void> => {
+const getGarden = async (gardenId: number = 1): Promise<Garden | void> => {
   const authToken = await getAuthenticationToken();
 
-  return fetch(`${baseApiUrl}/gardens/${gardenId}/plants`, {
+  return fetch(`${baseApiUrl}/gardens/${gardenId}`, {
     method: "GET",
     headers: {
       "content-type": "application/json",
       Authorization: `Bearer ${authToken}`,
     },
   })
-    .then((response: Response): Promise<Plant[]> | undefined => {
-      if (response.ok) {
-        return response.json();
-      } else if (response.status == 401) {
-        AsyncStorage.removeItem("authentication_token");
-        return undefined;
-      } else {
-        throw Error(response.statusText);
-      }
-    })
-    .then((plants: Plant[] | undefined): Plant[] | undefined => {
-      return plants;
+    .then(
+      (response: Response): Promise<Garden | undefined> => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status == 401) {
+          AsyncStorage.removeItem("authentication_token");
+          return undefined;
+        } else {
+          throw Error(response.statusText);
+        }
+      },
+    )
+    .then((result: Garden | undefined): Garden | undefined => {
+      return result;
     })
     .catch((error: Error): void => console.error(error.message));
 };
@@ -86,4 +88,4 @@ const signUp = (
   );
 };
 
-export { getPlants, signIn, signOut, signUp };
+export { getGarden, signIn, signOut, signUp };

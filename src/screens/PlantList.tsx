@@ -4,8 +4,8 @@ import { Page } from "../components/Page";
 import PlantListItem from "../components/PlantListItem";
 import { onSignOut, retrieveCurrentUser } from "../Session";
 import { NavigationStackProp } from "react-navigation-stack";
-import { getPlants } from "../api/Api";
-import { Plant, User } from "../api/Types";
+import { getGarden } from "../api/Api";
+import { User, Garden } from "../api/Types";
 
 interface Props {
   navigation: NavigationStackProp;
@@ -18,25 +18,29 @@ const styles = StyleSheet.create({
 });
 
 const PlantList = (props: Props): ReactElement => {
-  const [plantData, setPlantData] = useState<Plant[]>();
+  const [garden, setGarden] = useState<Garden>();
   const { navigation } = props;
 
   retrieveCurrentUser().then((user: User | void): void => {
     if (user) {
-      getPlants(user.default_garden_id).then((plants: Plant[] | void): void => {
-        if (
-          (plants && !plantData) ||
-          (plants && plantData && plants.length > plantData.length)
-        ) {
-          setPlantData(plants);
-        }
-      });
+      getGarden(user.default_garden_id).then(
+        (gardenResponse: Garden | void): void => {
+          if (
+            (!garden && gardenResponse) ||
+            (garden &&
+              gardenResponse &&
+              gardenResponse.plants.length > garden.plants.length)
+          ) {
+            setGarden(gardenResponse);
+          }
+        },
+      );
     } else {
       onSignOut().then((): boolean => navigation.navigate("SignedOut"));
     }
   });
 
-  if (plantData && plantData.length > 0) {
+  if (garden && garden.plants.length > 0) {
     return (
       <Page>
         <Button
@@ -48,7 +52,7 @@ const PlantList = (props: Props): ReactElement => {
         <View style={styles.plantList}>
           <FlatList
             contentInsetAdjustmentBehavior="automatic"
-            data={plantData}
+            data={garden.plants}
             renderItem={({ item }): ReactElement => (
               <PlantListItem plant={item} />
             )}
@@ -59,7 +63,7 @@ const PlantList = (props: Props): ReactElement => {
         </View>
       </Page>
     );
-  } else if (plantData && plantData.length == 0) {
+  } else if (garden && garden.plants.length == 0) {
     return (
       <Page>
         <View>
