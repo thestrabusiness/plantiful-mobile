@@ -7,13 +7,17 @@ import {
   Text,
   Animated,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { Page } from "../components/Page";
-import PlantListItem from "../components/PlantListItem";
+import PlantListItem from "../components/plants/PlantListItem";
 import { onSignOut, retrieveCurrentUser } from "../Session";
 import { NavigationStackProp } from "react-navigation-stack";
 import { getGarden } from "../api/Api";
 import { User, Garden } from "../api/Types";
+import Icon from "react-native-vector-icons/Octicons";
+import LoadingMessage from "../components/plants/LoadingMessage";
+import _ from "lodash";
 
 interface Props {
   navigation: NavigationStackProp;
@@ -23,10 +27,6 @@ const windowWidth = Dimensions.get("window").width;
 const drawerWidth = 300;
 
 const styles = StyleSheet.create({
-  plantList: {
-    alignItems: "center",
-    width: windowWidth,
-  },
   drawer: {
     position: "absolute",
     top: 0,
@@ -40,17 +40,34 @@ const styles = StyleSheet.create({
     backgroundColor: "#f53b3b",
     alignItems: "center",
   },
-  menuLayout: {
+  header: {
+    paddingHorizontal: 15,
+  },
+  menuHeaderItem: {
     marginBottom: 1,
     width: "100%",
     fontSize: 25,
+    marginTop: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  menuItem: {
+    marginBottom: 5,
+    width: "100%",
+    fontSize: 20,
     padding: 10,
+  },
+  plantList: {
+    alignItems: "center",
+    width: windowWidth,
   },
 });
 
 const PlantList = (props: Props): ReactElement => {
   const { navigation } = props;
   const [garden, setGarden] = useState<Garden>();
+  const [currentUser, setCurrentUser] = useState<User>();
+  const [currentGardenId, setCurrentGardenId] = useState();
   const viewPosition = useRef(new Animated.Value(0)).current;
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -69,13 +86,16 @@ const PlantList = (props: Props): ReactElement => {
 
   retrieveCurrentUser().then((user: User | void): void => {
     if (user) {
-      getGarden(user.default_garden_id).then(
+      if (!currentUser) {
+        setCurrentUser(user);
+      }
+      getGarden(currentGardenId || user.default_garden_id).then(
         (gardenResponse: Garden | void): void => {
           if (
             (!garden && gardenResponse) ||
             (garden &&
               gardenResponse &&
-              gardenResponse.plants.length > garden.plants.length)
+              !_.isEqual(gardenResponse.plants, garden.plants))
           ) {
             setGarden(gardenResponse);
           }
@@ -86,77 +106,113 @@ const PlantList = (props: Props): ReactElement => {
     }
   });
 
-  if (garden && garden.plants.length > 0) {
+  const ViewHeader = (): ReactElement => {
+    return (
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={{ width: 30 }}
+          onPress={(): void => {
+            setMenuOpen(!menuOpen);
+          }}
+        >
+          <Icon name="three-bars" size={35} />
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  const SignOutButton = (): ReactElement => {
+    return (
+      <Button
+        title="Sign Out"
+        onPress={(): void => {
+          onSignOut().then((): boolean => navigation.navigate("SignedOut"));
+        }}
+      />
+    );
+  };
+
+  const ViewWithDrawer = ({
+    children,
+  }: {
+    children: ReactElement | ReactElement[];
+  }): ReactElement => {
     return (
       <Page>
         <Animated.View
           style={[{ transform: [{ translateX: viewTranslationX }] }]}
         >
-          <View style={styles.plantList}>
-            <FlatList
-              contentInsetAdjustmentBehavior="automatic"
-              data={garden.plants}
-              renderItem={({ item }): ReactElement => (
-                <PlantListItem plant={item} />
-              )}
-              keyExtractor={(item): string => item.id.toString()}
-              numColumns={3}
-              columnWrapperStyle={styles.plantList}
-            />
-            <Button
-              title="Open Menu"
-              onPress={(): void => {
-                setMenuOpen(!menuOpen);
-              }}
-            />
-            <Button
-              title="Sign Out"
-              onPress={(): void => {
-                onSignOut().then((): boolean =>
-                  navigation.navigate("SignedOut"),
-                );
-              }}
-            />
-          </View>
+          <ViewHeader />
+          {children}
           <View style={styles.drawer}>
-            <Text style={styles.menuLayout}>This is the drawer</Text>
-            <Text style={styles.menuLayout}>This is menu option</Text>
-            <Text style={styles.menuLayout}>Another menu item</Text>
-            <Button
-              title="Close menu"
-              onPress={(): void => {
-                setMenuOpen(!menuOpen);
-              }}
-            />
+            <Text style={styles.menuHeaderItem}>Your Gardens</Text>
+            {currentUser &&
+              currentUser.owned_gardens.map((garden: Garden) => {
+                return (
+                  <TouchableOpacity
+                    key={garden.id}
+                    onPress={(): void => {
+                      setMenuOpen(!menuOpen);
+                      setCurrentGardenId(garden.id);
+                    }}
+                  >
+                    <Text style={styles.menuItem}>{garden.name}</Text>
+                  </TouchableOpacity>
+                );
+              })}
+            <Text style={styles.menuHeaderItem}>Shared Gardens</Text>
+            {currentUser &&
+              currentUser.shared_gardens.map((garden: Garden) => {
+                return (
+                  <TouchableOpacity
+                    key={garden.id}
+                    onPress={(): void => {
+                      setMenuOpen(!menuOpen);
+                      setCurrentGardenId(garden.id);
+                    }}
+                  >
+                    <Text style={styles.menuItem}>{garden.name}</Text>
+                  </TouchableOpacity>
+                );
+              })}
           </View>
         </Animated.View>
       </Page>
     );
+  };
+
+  if (garden && garden.plants.length > 0) {
+    return (
+      <ViewWithDrawer>
+        <View style={styles.plantList}>
+          <FlatList
+            contentInsetAdjustmentBehavior="automatic"
+            data={garden.plants}
+            renderItem={({ item }): ReactElement => (
+              <PlantListItem plant={item} />
+            )}
+            keyExtractor={(item): string => item.id.toString()}
+            numColumns={3}
+            columnWrapperStyle={styles.plantList}
+          />
+          <SignOutButton />
+        </View>
+      </ViewWithDrawer>
+    );
   } else if (garden && garden.plants.length == 0) {
     return (
-      <Page>
-        <View>
+      <ViewWithDrawer>
+        <View style={styles.plantList}>
           <Text>
             There are no plants in this garden! Click the + to add some new
             friends.
           </Text>
-          <Button
-            title="Sign Out"
-            onPress={(): void => {
-              onSignOut().then((): boolean => navigation.navigate("SignedOut"));
-            }}
-          />
         </View>
-      </Page>
+        <SignOutButton />
+      </ViewWithDrawer>
     );
   } else {
-    return (
-      <Page>
-        <View>
-          <Text>Loading...</Text>
-        </View>
-      </Page>
-    );
+    return <LoadingMessage />;
   }
 };
 
