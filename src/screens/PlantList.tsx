@@ -143,7 +143,7 @@ const PlantList = (props: Props): ReactElement => {
   const MenuSection = (props: {
     gardens: Garden[];
     title: string;
-  }): ReactElement => {
+  }): ReactElement | null => {
     const menuItems = props.gardens.map((garden: Garden) => {
       return (
         <TouchableOpacity
@@ -158,12 +158,16 @@ const PlantList = (props: Props): ReactElement => {
       );
     });
 
-    return (
-      <View>
-        <Text style={styles.menuHeaderItem}>{props.title}</Text>
-        {menuItems}
-      </View>
-    );
+    if (menuItems.length > 0) {
+      return (
+        <View>
+          <Text style={styles.menuHeaderItem}>{props.title}</Text>
+          {menuItems}
+        </View>
+      );
+    } else {
+      return null;
+    }
   };
 
   const ViewWithDrawer = ({
