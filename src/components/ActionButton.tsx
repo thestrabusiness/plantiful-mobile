@@ -2,6 +2,16 @@ import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Octicons";
 
+function elevationShadowStyle(elevation: number) {
+  return {
+    elevation,
+    shadowColor: "black",
+    shadowOffset: { width: 3, height: 0.75 * elevation },
+    shadowOpacity: 0.6,
+    shadowRadius: 0.8 * elevation,
+  };
+}
+
 const styles = StyleSheet.create({
   actionButton: {
     alignItems: "center",
@@ -12,11 +22,11 @@ const styles = StyleSheet.create({
     height: 70,
     justifyContent: "center",
     right: 10,
-    shadowOpacity: 0.6,
-    shadowColor: "black",
-    shadowOffset: { width: 3, height: 4 },
     width: 70,
     zIndex: 2,
+  },
+  shadow: {
+    ...elevationShadowStyle(5),
   },
   plus: {
     top: 1,
@@ -30,7 +40,7 @@ interface ActionButtonProps {
 const ActionButton = (props: ActionButtonProps) => {
   return (
     <TouchableOpacity
-      style={styles.actionButton}
+      style={[styles.actionButton, styles.shadow]}
       onPress={props.onPress}
       activeOpacity={0.9}
     >
