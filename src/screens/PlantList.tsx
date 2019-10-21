@@ -19,6 +19,8 @@ import Icon from "react-native-vector-icons/Octicons";
 import LoadingMessage from "../components/plants/LoadingMessage";
 import _ from "lodash";
 
+import ActionButton from "../components/ActionButton";
+
 interface Props {
   navigation: NavigationStackProp;
 }
@@ -113,6 +115,16 @@ const PlantList = (props: Props): ReactElement => {
       onSignOut().then((): boolean => navigation.navigate("SignedOut"));
     }
   });
+
+  const AddPlantsButton = () => {
+    return (
+      <ActionButton
+        onPress={() => {
+          console.log("pressed");
+        }}
+      />
+    );
+  };
 
   const ViewHeader = (): ReactElement => {
     return (
@@ -209,6 +221,7 @@ const PlantList = (props: Props): ReactElement => {
     return (
       <ViewWithDrawer>
         <View style={[styles.plantList, styles.leftOfDrawer]}>
+          <AddPlantsButton />
           <FlatList
             contentInsetAdjustmentBehavior="automatic"
             data={garden.plants}
@@ -224,6 +237,7 @@ const PlantList = (props: Props): ReactElement => {
   } else if (garden && garden.plants.length == 0) {
     return (
       <ViewWithDrawer>
+        <AddPlantsButton />
         <View style={[styles.plantList, styles.leftOfDrawer]}>
           <Text>
             There are no plants in this garden! Click the + to add some new
