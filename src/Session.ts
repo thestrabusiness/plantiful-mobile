@@ -22,7 +22,7 @@ const getAuthenticationToken = (): Promise<string> => {
 const onSignIn = (email: string, password: string): Promise<boolean> => {
   return signIn(email, password)
     .then((user: User): boolean => {
-      AsyncStorage.setItem(AUTH_TOKEN_KEY, user.remember_token);
+      AsyncStorage.setItem(AUTH_TOKEN_KEY, user.api_token);
       AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
       return true;
     })

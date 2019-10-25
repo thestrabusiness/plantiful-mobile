@@ -35,6 +35,7 @@ interface User {
   last_name: string;
   email: string;
   remember_token: string;
+  api_token: string;
   owned_gardens: Garden[];
   shared_gardens: Garden[];
 }
