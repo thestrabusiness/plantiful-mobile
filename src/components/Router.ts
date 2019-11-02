@@ -6,6 +6,7 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
 import PlantList from "../screens/PlantList";
+import PlantForm from "../screens/PlantForm";
 import { NavigationNavigator } from "react-navigation";
 
 const headerStyle = {
@@ -29,11 +30,20 @@ const SignedOut = createStackNavigator({
   },
 });
 
+const PlantsNavigationStack = createStackNavigator({
+  PlantList: {
+    screen: PlantList,
+  },
+  PlantForm: {
+    screen: PlantForm,
+  },
+});
+
 const SignedIn = createBottomTabNavigator({
   Home: {
-    screen: PlantList,
+    screen: PlantsNavigationStack,
     navigationOptions: {
-      tabBarLabel: "Plant List",
+      tabBarLabel: "My Gardens",
     },
   },
 });

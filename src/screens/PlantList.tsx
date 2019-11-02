@@ -120,7 +120,7 @@ const PlantList = (props: Props): ReactElement => {
     return (
       <ActionButton
         onPress={() => {
-          console.log("pressed");
+          navigation.navigate("PlantForm");
         }}
       />
     );
