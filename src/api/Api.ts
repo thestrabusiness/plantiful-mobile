@@ -8,13 +8,18 @@ const baseApiUrl =
     ? "http://10.0.2.2:3000/api"
     : "http://localhost:3000/api";
 
+const defaultHeaders = {
+  "content-type": "application/json",
+  "session-type": "mobile",
+};
+
 const getGarden = async (gardenId: number = 1): Promise<Garden | void> => {
   const authToken = await getAuthenticationToken();
 
   return fetch(`${baseApiUrl}/gardens/${gardenId}`, {
     method: "GET",
     headers: {
-      "content-type": "application/json",
+      ...defaultHeaders,
       Authorization: `Bearer ${authToken}`,
     },
   })
@@ -39,7 +44,7 @@ const getGarden = async (gardenId: number = 1): Promise<Garden | void> => {
 const signIn = async (email: string, password: string): Promise<User> => {
   return fetch(`${baseApiUrl}/sessions`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: defaultHeaders,
     body: JSON.stringify({
       user: {
         email,
@@ -57,10 +62,15 @@ const signIn = async (email: string, password: string): Promise<User> => {
   );
 };
 
-const signOut = (): Promise<Response> => {
+const signOut = async (): Promise<Response> => {
+  const authToken = await getAuthenticationToken();
+
   return fetch(`${baseApiUrl}/sign_out`, {
     method: "DELETE",
-    headers: { "content-type": "application/json" },
+    headers: {
+      ...defaultHeaders,
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 };
 
@@ -72,7 +82,7 @@ const signUp = (
 ): Promise<User> => {
   return fetch(`${baseApiUrl}/users`, {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers: defaultHeaders,
     body: JSON.stringify({
       user: {
         first_name: firstName,
