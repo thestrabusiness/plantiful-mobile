@@ -17,6 +17,7 @@
     "array-bracket-spacing": ["error", "never"],
     "space-before-function-paren": ["error", "always"],
     "camelcase": "off",
-    "@typescript-eslint/camelcase": ["error", { "properties": "never" }]
+    "@typescript-eslint/camelcase": ["error", { "properties": "never" }],
+    "react/prop-types": 0
   }
 }

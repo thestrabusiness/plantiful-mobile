@@ -1,7 +1,8 @@
 import { Platform } from "react-native";
-import { getAuthenticationToken } from "../Session";
 import AsyncStorage from "@react-native-community/async-storage";
-import { Garden, User } from "./Types";
+
+import { getAuthenticationToken } from "../Session";
+import { Garden, User, Plant } from "./Types";
 
 const baseApiUrl =
   Platform.OS == "android"
@@ -11,6 +12,46 @@ const baseApiUrl =
 const defaultHeaders = {
   "content-type": "application/json",
   "session-type": "mobile",
+};
+
+const createPlant = async (
+  gardenId: number,
+  name: string,
+  checkFrequencyUnit: string,
+  checkFrequencyScalar: number,
+): Promise<Plant | void> => {
+  const authToken = await getAuthenticationToken();
+
+  return fetch(`${baseApiUrl}/gardens/${gardenId}/plants`, {
+    method: "POST",
+    headers: {
+      ...defaultHeaders,
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      plant: {
+        name,
+        check_frequency_scalar: checkFrequencyScalar,
+        check_frequency_unit: checkFrequencyUnit,
+      },
+    }),
+  })
+    .then(
+      (response: Response): Promise<Plant | undefined> => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status == 401) {
+          AsyncStorage.removeItem("authentication_token");
+          return undefined;
+        } else {
+          throw Error(response.statusText);
+        }
+      },
+    )
+    .then((result: Plant | undefined): Plant | undefined => {
+      return result;
+    })
+    .catch((error: Error): void => console.error(error.message));
 };
 
 const getGarden = async (gardenId: number = 1): Promise<Garden | void> => {
@@ -102,4 +143,4 @@ const signUp = (
   );
 };
 
-export { getGarden, signIn, signOut, signUp };
+export { createPlant, getGarden, signIn, signOut, signUp };

@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useState, FunctionComponent } from "react";
 import {
   View,
   Text,
@@ -6,10 +6,12 @@ import {
   Picker,
   StyleSheet,
   Button,
-  TouchableOpacity,
 } from "react-native";
 import NumericInput from "react-native-numeric-input";
+import { NavigationStackProp } from "react-navigation-stack";
+
 import { Page } from "../components/Page";
+import { createPlant } from "../api/Api";
 
 const styles = StyleSheet.create({
   inputField: {
@@ -20,53 +22,103 @@ const styles = StyleSheet.create({
     width: "100%",
     textAlign: "center",
   },
+  checkFrequencyRow: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  checkFrequencyUnit: {
+    flex: 2,
+  },
+  formSpacing: {
+    marginTop: 30,
+  },
 });
 
-const capitalize = (string: string): string => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+const pluralize = (string: string, count: number): string => {
+  if (count > 1) {
+    return string + "s";
+  } else {
+    return string;
+  }
 };
 
-const PlantForm = (): ReactElement => {
+const submitForm = (
+  gardenId: number,
+  name: string,
+  checkFrequencyUnit: string,
+  checkFrequencyScalar: number,
+  navigation: NavigationStackProp,
+): void => {
+  const postResult = createPlant(
+    gardenId,
+    name,
+    checkFrequencyUnit,
+    checkFrequencyScalar,
+  );
+
+  if (postResult) {
+    navigation.navigate("PlantList");
+  }
+};
+
+interface PlantFormProps {
+  navigation: NavigationStackProp;
+}
+
+const PlantForm: FunctionComponent<PlantFormProps> = ({
+  navigation,
+}): ReactElement => {
+  const gardenId = parseInt(navigation.getParam("gardenId", "0"));
+
   const [name, setName] = useState("");
   const [checkFrequencyScalar, setCheckFrequencyScalar] = useState(1);
   const [checkFrequencyUnit, setCheckFrequencyUnit] = useState("day");
+
+  const dayLabel = pluralize("Day", checkFrequencyScalar);
+  const weekLabel = pluralize("Week", checkFrequencyScalar);
 
   return (
     <Page>
       <Text> Add a plant!</Text>
       <TextInput
-        style={styles.inputField}
+        style={[styles.inputField, styles.formSpacing]}
         placeholder={"Name"}
         value={name}
         onChangeText={(value: string): void => {
           setName(value);
         }}
       />
-      <View style={{ flexDirection: "row" }}>
+      <View style={styles.checkFrequencyRow}>
         <NumericInput
+          minValue={1}
           value={checkFrequencyScalar}
           onChange={(value: number): void => {
             setCheckFrequencyScalar(value);
           }}
           type="plus-minus"
         />
-        <TouchableOpacity style={{ flex: 3 }}>
-          <Text>{capitalize(checkFrequencyUnit)}</Text>
-        </TouchableOpacity>
+        <Picker
+          style={styles.checkFrequencyUnit}
+          selectedValue={checkFrequencyUnit}
+          onValueChange={(value: string): void => {
+            setCheckFrequencyUnit(value);
+          }}
+        >
+          <Picker.Item label={dayLabel} value="day" />
+          <Picker.Item label={weekLabel} value="week" />
+        </Picker>
       </View>
-      <Picker
-        selectedValue={checkFrequencyUnit}
-        onValueChange={(value: string): void => {
-          setCheckFrequencyUnit(value);
-        }}
-      >
-        <Picker.Item label="Day" value="day" />
-        <Picker.Item label="Week" value="week" />
-      </Picker>
       <Button
         title="Submit"
         onPress={(): void => {
-          console.log(name, checkFrequencyUnit, checkFrequencyScalar);
+          submitForm(
+            gardenId,
+            name,
+            checkFrequencyUnit,
+            checkFrequencyScalar,
+            navigation,
+          );
         }}
       />
     </Page>

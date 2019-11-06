@@ -116,11 +116,13 @@ const PlantList = (props: Props): ReactElement => {
     }
   });
 
-  const AddPlantsButton = () => {
+  const AddPlantsButton = (): ReactElement => {
     return (
       <ActionButton
-        onPress={() => {
-          navigation.navigate("PlantForm");
+        onPress={(): void => {
+          navigation.navigate("PlantForm", {
+            gardenId: garden && garden.id.toString(),
+          });
         }}
       />
     );
