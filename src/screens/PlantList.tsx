@@ -1,4 +1,10 @@
-import React, { ReactElement, useState, useEffect, useRef } from "react";
+import React, {
+  ReactElement,
+  useState,
+  useEffect,
+  useRef,
+  FunctionComponent,
+} from "react";
 import {
   StyleSheet,
   View,
@@ -9,21 +15,17 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Page } from "../components/Page";
-import PlantListItem from "../components/plants/PlantListItem";
-import { onSignOut, retrieveCurrentUser } from "../Session";
-import { NavigationStackProp } from "react-navigation-stack";
+import _ from "lodash";
+import Icon from "react-native-vector-icons/Octicons";
+
 import { getGarden } from "../api/Api";
 import { User, Garden } from "../api/Types";
-import Icon from "react-native-vector-icons/Octicons";
+import { Page } from "../components/Page";
+import { NavigationProps } from "../components/Router";
+import PlantListItem from "../components/plants/PlantListItem";
+import { onSignOut, retrieveCurrentUser } from "../Session";
 import LoadingMessage from "../components/plants/LoadingMessage";
-import _ from "lodash";
-
 import ActionButton from "../components/ActionButton";
-
-interface Props {
-  navigation: NavigationStackProp;
-}
 
 const windowWidth = Dimensions.get("window").width;
 const drawerWidth = 300;
@@ -73,8 +75,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const PlantList = (props: Props): ReactElement => {
-  const { navigation } = props;
+const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [garden, setGarden] = useState<Garden>();
   const [currentUser, setCurrentUser] = useState<User>();
   const [currentGardenId, setCurrentGardenId] = useState();
@@ -228,7 +229,7 @@ const PlantList = (props: Props): ReactElement => {
             contentInsetAdjustmentBehavior="automatic"
             data={garden.plants}
             renderItem={({ item }): ReactElement => (
-              <PlantListItem plant={item} />
+              <PlantListItem plant={item} navigation={navigation} />
             )}
             keyExtractor={(item): string => item.id.toString()}
             numColumns={3}

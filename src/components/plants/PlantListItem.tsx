@@ -1,11 +1,17 @@
-import React, { ReactElement } from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import React, { FunctionComponent } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import FastImage from "react-native-fast-image";
 
-import { avatarUri } from "../../fixtures/AvatarPlaceholder";
+import { NavigationProps } from "../Router";
 import { Plant } from "../../api/Types";
 
-interface Props {
+interface Props extends NavigationProps {
   plant: Plant;
 }
 
@@ -22,13 +28,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const PlantListItem = (props: Props): ReactElement => {
-  const { plant } = props;
+const PlantListItem: FunctionComponent<Props> = ({ plant, navigation }) => {
   return (
-    <View style={styles.plantItem}>
-      <FastImage source={{ uri: avatarUri }} style={styles.plantItemImage} />
-      <Text>{plant.name}</Text>
-    </View>
+    <TouchableOpacity
+      onPress={(): void => {
+        navigation.navigate("PlantDetails", { id: plant.id });
+      }}
+    >
+      <View style={styles.plantItem}>
+        <FastImage
+          source={{ uri: plant.avatar }}
+          style={styles.plantItemImage}
+        />
+        <Text>{plant.name}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
