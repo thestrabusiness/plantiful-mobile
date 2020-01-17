@@ -1,5 +1,7 @@
 import React, { ReactElement } from "react";
-import { StyleSheet, View, Text, Image, Dimensions } from "react-native";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
+import FastImage from "react-native-fast-image";
+
 import { avatarUri } from "../../fixtures/AvatarPlaceholder";
 import { Plant } from "../../api/Types";
 
@@ -23,8 +25,8 @@ const styles = StyleSheet.create({
 const PlantListItem = (props: Props): ReactElement => {
   const { plant } = props;
   return (
-    <View key={plant.id} style={styles.plantItem}>
-      <Image source={{ uri: avatarUri }} style={styles.plantItemImage} />
+    <View style={styles.plantItem}>
+      <FastImage source={{ uri: avatarUri }} style={styles.plantItemImage} />
       <Text>{plant.name}</Text>
     </View>
   );
