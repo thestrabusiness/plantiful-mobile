@@ -2,9 +2,10 @@ import React, { FunctionComponent, useState, useEffect } from "react";
 import { Dimensions, Text, View, StyleSheet, ScrollView } from "react-native";
 import FastImage from "react-native-fast-image";
 
+import CheckInList from "../components/plants/CheckInList";
 import { NavigationProps } from "../components/Router";
 import { fetchPlant } from "../api/Api";
-import { Plant, CheckIn } from "../api/Types";
+import { Plant } from "../api/Types";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -28,9 +29,6 @@ const styles = StyleSheet.create({
   checkInHeader: {
     fontSize: 18,
     marginVertical: 10,
-  },
-  checkInRow: {
-    marginBottom: 10,
   },
 });
 
@@ -69,20 +67,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
             Next check-in due: {plant.next_check_date}
           </Text>
         </View>
-        <View>
-          <Text style={styles.checkInHeader}>Latest Check-ins:</Text>
-          {plant.check_ins.map((checkIn: CheckIn) => {
-            const createdAtDate = new Date(checkIn.created_at * 1000);
-            return (
-              <View key={checkIn.id} style={styles.checkInRow}>
-                <Text>{createdAtDate.toDateString()}</Text>
-                {checkIn.watered && <Text>Watered</Text>}
-                {checkIn.fertilized && <Text>Fertilized</Text>}
-                <Text>{checkIn.notes}</Text>
-              </View>
-            );
-          })}
-        </View>
+        <CheckInList checkIns={plant.check_ins} />
       </ScrollView>
     );
   }
