@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { Dimensions, Text, View, StyleSheet, ScrollView } from "react-native";
-import FastImage from "react-native-fast-image";
 
 import CheckInList from "../components/plants/CheckInList";
 import { NavigationProps } from "../components/Router";
 import { fetchPlant } from "../api/Api";
 import { Plant } from "../api/Types";
+import ImageWithIndicator from "../components/shared/ImageWithIndicator";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -62,7 +62,10 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
       <ScrollView style={styles.pageContainer}>
         <View style={styles.detailsContainer}>
           <Text style={styles.plantName}>{plant.name}</Text>
-          <FastImage source={{ uri: plant.avatar }} style={styles.plantImage} />
+          <ImageWithIndicator
+            source={plant.avatar}
+            imageStyle={styles.plantImage}
+          />
           <Text style={styles.checkInHeader}>
             Next check-in due: {plant.next_check_date}
           </Text>

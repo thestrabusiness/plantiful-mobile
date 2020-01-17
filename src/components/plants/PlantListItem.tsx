@@ -6,10 +6,10 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import FastImage from "react-native-fast-image";
 
 import { NavigationProps } from "../Router";
 import { Plant } from "../../api/Types";
+import ImageWithIndicator from "../shared/ImageWithIndicator";
 
 interface Props extends NavigationProps {
   plant: Plant;
@@ -36,9 +36,9 @@ const PlantListItem: FunctionComponent<Props> = ({ plant, navigation }) => {
       }}
     >
       <View style={styles.plantItem}>
-        <FastImage
-          source={{ uri: plant.avatar }}
-          style={styles.plantItemImage}
+        <ImageWithIndicator
+          source={plant.avatar}
+          imageStyle={styles.plantItemImage}
         />
         <Text>{plant.name}</Text>
       </View>
