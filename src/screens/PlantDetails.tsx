@@ -6,6 +6,7 @@ import { NavigationProps } from "../components/Router";
 import { fetchPlant } from "../api/Api";
 import { Plant } from "../api/Types";
 import ImageWithIndicator from "../components/shared/ImageWithIndicator";
+import ActionButton from "../components/ActionButton";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -36,6 +37,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [plant, setPlant] = useState<Plant>();
   const [loading, setLoading] = useState(true);
   const plantId = navigation.getParam("id", null);
+  const plantName = plant?.name;
 
   useEffect(() => {
     let resolvePromise = true;
@@ -59,19 +61,26 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
 
   if (plant) {
     return (
-      <ScrollView style={styles.pageContainer}>
-        <View style={styles.detailsContainer}>
-          <Text style={styles.plantName}>{plant.name}</Text>
-          <ImageWithIndicator
-            source={plant.avatar}
-            imageStyle={styles.plantImage}
-          />
-          <Text style={styles.checkInHeader}>
-            Next check-in due: {plant.next_check_date}
-          </Text>
-        </View>
-        <CheckInList checkIns={plant.check_ins} />
-      </ScrollView>
+      <>
+        <ActionButton
+          onPress={(): void => {
+            navigation.navigate("PlantCheckIn", {plantId, plantName});
+          }}
+        />
+        <ScrollView style={styles.pageContainer}>
+          <View style={styles.detailsContainer}>
+            <Text style={styles.plantName}>{plant.name}</Text>
+            <ImageWithIndicator
+              source={plant.avatar}
+              imageStyle={styles.plantImage}
+            />
+            <Text style={styles.checkInHeader}>
+              Next check-in due: {plant.next_check_date}
+            </Text>
+          </View>
+          <CheckInList checkIns={plant.check_ins} />
+        </ScrollView>
+      </>
     );
   }
 

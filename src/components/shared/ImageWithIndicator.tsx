@@ -1,5 +1,11 @@
-import React, {useState, FunctionComponent} from "react";
-import {ActivityIndicator, StyleSheet, StyleProp, View, ViewStyle} from "react-native";
+import React, { useState, FunctionComponent } from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  StyleProp,
+  View,
+  ViewStyle,
+} from "react-native";
 
 import FastImage from "react-native-fast-image";
 
@@ -16,13 +22,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const ImageWithIndicator: FunctionComponent<Props> = ({source, imageStyle}) => {
+const ImageWithIndicator: FunctionComponent<Props> = ({
+  source,
+  imageStyle,
+}) => {
   const [loading, setLoading] = useState(true);
+  console.log(source);
   return (
     <View>
-      {loading && <ActivityIndicator size="large" style={styles.indicatorStyle} />}
+      {loading && (
+        <ActivityIndicator size="large" style={styles.indicatorStyle} />
+      )}
       <FastImage
-        source={{uri: source}}
+        source={{ uri: source }}
         style={imageStyle}
         onLoadEnd={(): void => {
           setLoading(false);

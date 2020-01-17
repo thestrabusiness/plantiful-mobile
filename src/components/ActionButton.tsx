@@ -1,8 +1,8 @@
-import React from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import React, { FunctionComponent } from "react";
+import { StyleSheet, View, TouchableOpacity, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/Octicons";
 
-function elevationShadowStyle(elevation: number) {
+const elevationShadowStyle = (elevation: number): ViewStyle => {
   return {
     elevation,
     shadowColor: "black",
@@ -10,7 +10,7 @@ function elevationShadowStyle(elevation: number) {
     shadowOpacity: 0.6,
     shadowRadius: 0.8 * elevation,
   };
-}
+};
 
 const styles = StyleSheet.create({
   actionButton: {
@@ -37,11 +37,11 @@ interface ActionButtonProps {
   onPress: () => void;
 }
 
-const ActionButton = (props: ActionButtonProps) => {
+const ActionButton: FunctionComponent<ActionButtonProps> = ({ onPress }) => {
   return (
     <TouchableOpacity
       style={[styles.actionButton, styles.shadow]}
-      onPress={props.onPress}
+      onPress={onPress}
       activeOpacity={0.9}
     >
       <View>

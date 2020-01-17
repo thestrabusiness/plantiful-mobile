@@ -2,7 +2,7 @@ import { Platform } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 
 import { getAuthenticationToken } from "../Session";
-import { Garden, User, Plant } from "./Types";
+import { Garden, User, Plant, CheckIn } from "./Types";
 
 const baseApiUrl =
   Platform.OS == "android"
@@ -110,6 +110,46 @@ const getGarden = async (gardenId: number = 1): Promise<Garden | void> => {
     .catch((error: Error): void => console.error(error.message));
 };
 
+const createCheckIn = async (
+  plantId: number,
+  watered: boolean,
+  fertilized: boolean,
+  notes: string,
+): Promise<CheckIn | void> => {
+  const authToken = await getAuthenticationToken();
+
+  return fetch(`${baseApiUrl}/plants/${plantId}/check_ins`, {
+    method: "POST",
+    headers: {
+      ...defaultHeaders,
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      check_in: {
+        watered,
+        fertilized,
+        notes,
+      },
+    }),
+  })
+    .then(
+      (response: Response): Promise<CheckIn | undefined> => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status == 401) {
+          AsyncStorage.removeItem("authentication_token");
+          return undefined;
+        } else {
+          throw Error(response.statusText);
+        }
+      },
+    )
+    .then((result: CheckIn | undefined): CheckIn | undefined => {
+      return result;
+    })
+    .catch((error: Error): void => console.error(error.message));
+};
+
 const signIn = async (email: string, password: string): Promise<User> => {
   return fetch(`${baseApiUrl}/sessions`, {
     method: "POST",
@@ -171,4 +211,12 @@ const signUp = (
   );
 };
 
-export { createPlant, fetchPlant, getGarden, signIn, signOut, signUp };
+export {
+  createCheckIn,
+  createPlant,
+  fetchPlant,
+  getGarden,
+  signIn,
+  signOut,
+  signUp,
+};
