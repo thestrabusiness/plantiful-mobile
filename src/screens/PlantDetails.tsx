@@ -1,0 +1,93 @@
+import React, { FunctionComponent, useState, useEffect } from "react";
+import { Dimensions, Text, View, StyleSheet, ScrollView } from "react-native";
+import FastImage from "react-native-fast-image";
+
+import { NavigationProps } from "../components/Router";
+import { fetchPlant } from "../api/Api";
+import { Plant, CheckIn } from "../api/Types";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
+const styles = StyleSheet.create({
+  pageContainer: {
+    paddingHorizontal: 10,
+  },
+  detailsContainer: {
+    alignItems: "center",
+    height: windowHeight * 0.33,
+    justifyContent: "space-around",
+  },
+  plantName: {
+    fontSize: 24,
+  },
+  plantImage: {
+    height: windowWidth * 0.5,
+    width: windowWidth * 0.5,
+  },
+  checkInHeader: {
+    fontSize: 18,
+    marginVertical: 10,
+  },
+  checkInRow: {
+    marginBottom: 10,
+  },
+});
+
+const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
+  const [plant, setPlant] = useState<Plant>();
+  const [loading, setLoading] = useState(true);
+  const plantId = navigation.getParam("id", null);
+
+  useEffect(() => {
+    let resolvePromise = true;
+
+    fetchPlant(plantId).then((response: Plant | void) => {
+      if (response && resolvePromise) {
+        setLoading(false);
+        setPlant(response);
+      } else {
+        navigation.goBack();
+      }
+    });
+    return (): void => {
+      resolvePromise = false;
+    };
+  }, []);
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (plant) {
+    return (
+      <ScrollView style={styles.pageContainer}>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.plantName}>{plant.name}</Text>
+          <FastImage source={{ uri: plant.avatar }} style={styles.plantImage} />
+          <Text style={styles.checkInHeader}>
+            Next check-in due: {plant.next_check_date}
+          </Text>
+        </View>
+        <View>
+          <Text style={styles.checkInHeader}>Latest Check-ins:</Text>
+          {plant.check_ins.map((checkIn: CheckIn) => {
+            const createdAtDate = new Date(checkIn.created_at * 1000);
+            return (
+              <View key={checkIn.id} style={styles.checkInRow}>
+                <Text>{createdAtDate.toDateString()}</Text>
+                {checkIn.watered && <Text>Watered</Text>}
+                {checkIn.fertilized && <Text>Fertilized</Text>}
+                <Text>{checkIn.notes}</Text>
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+    );
+  }
+
+  return <></>;
+};
+
+export default PlantDetails;

@@ -2,16 +2,26 @@ import { Platform, StatusBar } from "react-native";
 import { createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createBottomTabNavigator } from "react-navigation-tabs";
+import {
+  NavigationParams,
+  NavigationScreenProp,
+  NavigationState,
+  NavigationNavigator,
+} from "react-navigation";
 
 import SignIn from "../screens/SignIn";
 import SignUp from "../screens/SignUp";
 import PlantList from "../screens/PlantList";
 import PlantForm from "../screens/PlantForm";
-import { NavigationNavigator } from "react-navigation";
+import PlantDetails from "../screens/PlantDetails";
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
 };
+
+interface NavigationProps {
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+}
 
 const SignedOut = createStackNavigator({
   SignIn: {
@@ -31,19 +41,16 @@ const SignedOut = createStackNavigator({
 });
 
 const PlantsNavigationStack = createStackNavigator({
-  PlantList: {
-    screen: PlantList,
-  },
-  PlantForm: {
-    screen: PlantForm,
-  },
+  PlantList,
+  PlantForm,
+  PlantDetails,
 });
 
 const SignedIn = createBottomTabNavigator({
   Home: {
     screen: PlantsNavigationStack,
     navigationOptions: {
-      tabBarLabel: "My Gardens",
+      tabBarLabel: "My Plants",
     },
   },
 });
@@ -64,4 +71,5 @@ const AppNavigator = (signedIn = false): NavigationNavigator<any, any> => {
   );
 };
 
+export { NavigationProps };
 export default AppNavigator;
