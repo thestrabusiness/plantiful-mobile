@@ -6,7 +6,7 @@ import { Garden, User, Plant, CheckIn } from "./Types";
 
 const baseApiUrl =
   Platform.OS == "android"
-    ? "http://10.0.2.2:3000/api"
+    ? "http://192.168.1.142:3000/api"
     : "http://localhost:3000/api";
 
 const defaultHeaders = {
@@ -150,6 +150,33 @@ const createCheckIn = async (
     .catch((error: Error): void => console.error(error.message));
 };
 
+const uploadAvatar = async (
+  plantId: number,
+  photoData: string,
+): Promise<Plant> => {
+  const authToken = await getAuthenticationToken();
+
+  return fetch(`${baseApiUrl}/plants/${plantId}/avatar`, {
+    method: "POST",
+    headers: {
+      ...defaultHeaders,
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      plant: { avatar: photoData },
+    }),
+  }).then((response: Response) => {
+    if (response.ok) {
+      return response.json();
+    } else if (response.status == 401) {
+      AsyncStorage.removeItem("authentication_token");
+      return undefined;
+    } else {
+      throw Error(response.statusText);
+    }
+  });
+};
+
 const signIn = async (email: string, password: string): Promise<User> => {
   return fetch(`${baseApiUrl}/sessions`, {
     method: "POST",
@@ -219,4 +246,5 @@ export {
   signIn,
   signOut,
   signUp,
+  uploadAvatar,
 };

@@ -1,9 +1,9 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import { Dimensions, Text, View, StyleSheet, ScrollView } from "react-native";
+import {Dimensions, Text, TouchableOpacity, View, StyleSheet, ScrollView} from "react-native";
 
 import CheckInList from "../components/plants/CheckInList";
 import { NavigationProps } from "../components/Router";
-import { fetchPlant } from "../api/Api";
+import { fetchPlant, uploadAvatar } from "../api/Api";
 import { Plant } from "../api/Types";
 import ImageWithIndicator from "../components/shared/ImageWithIndicator";
 import ActionButton from "../components/ActionButton";
@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
 const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [plant, setPlant] = useState<Plant>();
   const [loading, setLoading] = useState(true);
+  const [avatarPhotoData, setAvatarPhotoData] = useState();
   const plantId = navigation.getParam("id", null);
   const plantName = plant?.name;
 
@@ -55,6 +56,13 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
     };
   }, []);
 
+  useEffect(() => {
+    if (avatarPhotoData) {
+      console.log("uploading photo");
+      uploadAvatar(plantId, avatarPhotoData);
+    }
+  }, [avatarPhotoData]);
+
   if (loading) {
     return <Text>Loading...</Text>;
   }
@@ -70,10 +78,17 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
         <ScrollView style={styles.pageContainer}>
           <View style={styles.detailsContainer}>
             <Text style={styles.plantName}>{plant.name}</Text>
-            <ImageWithIndicator
-              source={plant.avatar}
-              imageStyle={styles.plantImage}
-            />
+            <TouchableOpacity onPress={(): void => {
+              navigation.navigate(
+                "Camera",
+                {onPictureTaken: setAvatarPhotoData},
+              );
+            }}>
+              <ImageWithIndicator
+                source={avatarPhotoData || plant.avatar}
+                imageStyle={styles.plantImage}
+              />
+            </TouchableOpacity>
             <Text style={styles.checkInHeader}>
               Next check-in due: {plant.next_check_date}
             </Text>
