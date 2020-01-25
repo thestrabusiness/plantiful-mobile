@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
 const takePicture = async (
   camera: RNCamera,
   onPictureTaken: (data: string | null) => any,
+  cropSize: number,
 ): Promise<void> => {
   const options = {
     fixOrientation: true,
@@ -39,8 +40,8 @@ const takePicture = async (
 
   ImagePicker.openCropper({
     path: uri,
-    width: 400,
-    height: 400,
+    width: cropSize,
+    height: cropSize,
     includeBase64: true,
   }).then(image => {
     const base64Image = `data:image/jpeg;base64,${image.data}`;
@@ -49,9 +50,11 @@ const takePicture = async (
 };
 
 const Camera: FunctionComponent<NavigationProps> = ({ navigation }) => {
+  const cropSize: number = navigation.getParam("cropSize", 400);
   const onPictureTaken = navigation.getParam("onPictureTaken", () => {
     console.error("must navigate with onPictureTaken function param");
   });
+
   return (
     <View style={styles.container}>
       <RNCamera style={styles.preview}>
@@ -69,7 +72,7 @@ const Camera: FunctionComponent<NavigationProps> = ({ navigation }) => {
               >
                 <TouchableOpacity
                   onPress={(): void => {
-                    takePicture(camera, onPictureTaken).then(() => {
+                    takePicture(camera, onPictureTaken, cropSize).then(() => {
                       navigation.goBack();
                     });
                   }}

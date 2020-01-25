@@ -115,6 +115,7 @@ const createCheckIn = async (
   watered: boolean,
   fertilized: boolean,
   notes: string,
+  photos: string[] = [],
 ): Promise<CheckIn | void> => {
   const authToken = await getAuthenticationToken();
 
@@ -129,6 +130,7 @@ const createCheckIn = async (
         watered,
         fertilized,
         notes,
+        photos,
       },
     }),
   })

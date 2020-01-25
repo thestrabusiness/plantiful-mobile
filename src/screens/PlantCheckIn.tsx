@@ -4,6 +4,7 @@ import { Button, TextInput, Text, View, StyleSheet } from "react-native";
 import { createCheckIn } from "../api/Api";
 import SwitchInputField from "../components/shared/SwitchInputField";
 import { NavigationProps } from "../components/Router";
+import ImageAttachmentStrip from "../components/shared/ImageAttachmentStrip";
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   inputSection: {
-    height: "60%",
+    height: "80%",
     justifyContent: "space-between",
     alignContent: "space-between",
   },
@@ -36,6 +37,7 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [isFertilized, setIsFertilized] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notes, setNotes] = useState("");
+  const [images, setImages] = useState<string[]>([]);
 
   if (!plantId) {
     navigation.goBack();
@@ -57,6 +59,10 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
             value={isFertilized}
             setValue={setIsFertilized}
           />
+          <ImageAttachmentStrip
+            navigation={navigation}
+            setParentImages={setImages}
+          />
           <View>
             <Text>Notes</Text>
             <TextInput
@@ -73,7 +79,7 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
           title={isSubmitting ? "Submitting..." : "Submit"}
           onPress={(): void => {
             setIsSubmitting(true);
-            createCheckIn(plantId, isWatered, isFertilized, notes).then(
+            createCheckIn(plantId, isWatered, isFertilized, notes, images).then(
               result => {
                 if (result) {
                   navigation.goBack();
