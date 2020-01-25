@@ -27,7 +27,6 @@ const ImageWithIndicator: FunctionComponent<Props> = ({
   imageStyle,
 }) => {
   const [loading, setLoading] = useState(true);
-  console.log(source);
   return (
     <View>
       {loading && (
