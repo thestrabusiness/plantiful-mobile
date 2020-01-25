@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [plant, setPlant] = useState<Plant>();
   const [loading, setLoading] = useState(true);
-  const [avatarPhotoData, setAvatarPhotoData] = useState();
+  const [avatarPhotoData, setAvatarPhotoData] = useState(null);
   const plantId = navigation.getParam("id", null);
   const plantName = plant?.name;
 
@@ -57,7 +57,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (avatarPhotoData) {
+    if (avatarPhotoData !== null) {
       uploadAvatar(plantId, avatarPhotoData);
     }
   }, [avatarPhotoData]);

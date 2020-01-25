@@ -28,6 +28,7 @@ PODS:
   - libwebp/mux (1.0.3):
     - libwebp/demux
   - libwebp/webp (1.0.3)
+  - QBImagePickerController (3.4.0)
   - RCTRequired (0.61.2)
   - RCTTypeSafety (0.61.2):
     - FBLazyVector (= 0.61.2)
@@ -242,12 +243,18 @@ PODS:
     - SDWebImageWebPCoder (~> 0.2.3)
   - RNGestureHandler (1.5.3):
     - React
+  - RNImageCropPicker (0.27.0):
+    - QBImagePickerController
+    - React-Core
+    - React-RCTImage
+    - RSKImageCropper
   - RNReanimated (1.7.0):
     - React
   - RNScreens (1.0.0-alpha.23):
     - React
   - RNVectorIcons (6.6.0):
     - React
+  - RSKImageCropper (2.2.3)
   - SDWebImage (5.4.1):
     - SDWebImage/Core (= 5.4.1)
   - SDWebImage/Core (5.4.1)
@@ -262,6 +269,7 @@ DEPENDENCIES:
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - QBImagePickerController (from `../node_modules/react-native-image-crop-picker/ios/QBImagePicker/QBImagePickerController.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
   - RCTTypeSafety (from `../node_modules/react-native/Libraries/TypeSafety`)
   - React (from `../node_modules/react-native/`)
@@ -288,6 +296,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -297,6 +306,7 @@ SPEC REPOS:
   trunk:
     - boost-for-react-native
     - libwebp
+    - RSKImageCropper
     - SDWebImage
     - SDWebImageWebPCoder
 
@@ -311,6 +321,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/Folly.podspec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  QBImagePickerController:
+    :path: "../node_modules/react-native-image-crop-picker/ios/QBImagePicker/QBImagePickerController.podspec"
   RCTRequired:
     :path: "../node_modules/react-native/Libraries/RCTRequired"
   RCTTypeSafety:
@@ -357,6 +369,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fast-image"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNImageCropPicker:
+    :path: "../node_modules/react-native-image-crop-picker"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -374,6 +388,7 @@ SPEC CHECKSUMS:
   Folly: 30e7936e1c45c08d884aa59369ed951a8e68cf51
   glog: 1f3da668190260b06b429bb211bfbee5cd790c28
   libwebp: 057912d6d0abfb6357d8bb05c0ea470301f5d61e
+  QBImagePickerController: d54cf93db6decf26baf6ed3472f336ef35cae022
   RCTRequired: c639d59ed389cfb1f1203f65c2ea946d8ec586e2
   RCTTypeSafety: dc23fb655d6c77667c78e327bf661bc11e3b8aec
   React: 7e586e5d7bec12b91c1a096826b0fc9ab1da7865
@@ -397,13 +412,15 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 44395cb9c7c1523104c2b499eb426ef7aff82bca
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNGestureHandler: 02905abe54e1f6e59c081a10b4bd689721e17aa6
+  RNImageCropPicker: fcdbbbef2f0ea869c6d9ce39b8e4fd67e94009f4
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
   RNScreens: f28b48b8345f2f5f39ed6195518291515032a788
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
+  RSKImageCropper: a446db0e8444a036b34f3c43db01b2373baa4b2a
   SDWebImage: 29c340dbdcef342bb13125553f4e19ce056b07a7
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
   Yoga: 14927e37bd25376d216b150ab2a561773d57911f
 
-PODFILE CHECKSUM: 9cf3ab5a09dd6422e362696df7c4d960d92cbad9
+PODFILE CHECKSUM: 97d0aabe13d09921b30c0b5c4e9ac1cdb79552ff
 
 COCOAPODS: 1.8.4

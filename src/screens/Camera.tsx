@@ -2,10 +2,7 @@ import React, { FunctionComponent, ReactElement } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { RNCamera } from "react-native-camera";
 import { NavigationProps } from "../components/Router";
-
-enum PhotoOrientation {
-  Portrait = "portrait",
-}
+import ImagePicker from "react-native-image-crop-picker";
 
 const styles = StyleSheet.create({
   container: {
@@ -31,20 +28,24 @@ const styles = StyleSheet.create({
 
 const takePicture = async (
   camera: RNCamera,
-  onPictureTaken: (data: string | undefined) => any,
+  onPictureTaken: (data: string | null) => any,
 ): Promise<void> => {
   const options = {
-    base64: true,
-    doNotSave: true,
     fixOrientation: true,
     forceUpOrientation: true,
-    quality: 0.6,
   };
   const data = await camera.takePictureAsync(options);
-  const rawBase64 = data.base64;
-  const base64Image = `data:image/jpeg;base64,${rawBase64}`;
+  const uri = data.uri;
 
-  onPictureTaken(base64Image);
+  ImagePicker.openCropper({
+    path: uri,
+    width: 400,
+    height: 400,
+    includeBase64: true,
+  }).then(image => {
+    const base64Image = `data:image/jpeg;base64,${image.data}`;
+    onPictureTaken(base64Image);
+  });
 };
 
 const Camera: FunctionComponent<NavigationProps> = ({ navigation }) => {
@@ -68,8 +69,9 @@ const Camera: FunctionComponent<NavigationProps> = ({ navigation }) => {
               >
                 <TouchableOpacity
                   onPress={(): void => {
-                    takePicture(camera, onPictureTaken);
-                    navigation.goBack();
+                    takePicture(camera, onPictureTaken).then(() => {
+                      navigation.goBack();
+                    });
                   }}
                   style={styles.capture}
                 >

@@ -152,7 +152,7 @@ const createCheckIn = async (
 
 const uploadAvatar = async (
   plantId: number,
-  photoData: string,
+  photoData: string | null,
 ): Promise<Plant> => {
   const authToken = await getAuthenticationToken();
 
