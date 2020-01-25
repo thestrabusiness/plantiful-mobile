@@ -3,6 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { RNCamera } from "react-native-camera";
 import { NavigationProps } from "../components/Router";
 
+enum PhotoOrientation {
+  Portrait = "portrait",
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,7 +33,13 @@ const takePicture = async (
   camera: RNCamera,
   onPictureTaken: (data: string | undefined) => any,
 ): Promise<void> => {
-  const options = { quality: 0.5, base64: true };
+  const options = {
+    base64: true,
+    doNotSave: true,
+    fixOrientation: true,
+    forceUpOrientation: true,
+    quality: 0.6,
+  };
   const data = await camera.takePictureAsync(options);
   const rawBase64 = data.base64;
   const base64Image = `data:image/jpeg;base64,${rawBase64}`;
@@ -46,7 +56,7 @@ const Camera: FunctionComponent<NavigationProps> = ({ navigation }) => {
       <RNCamera style={styles.preview}>
         {({ camera, status }): ReactElement => {
           if (status !== "READY") {
-            return <Text>Loading...</Text>;
+            return <Text>Loading Camera...</Text>;
           } else {
             return (
               <View

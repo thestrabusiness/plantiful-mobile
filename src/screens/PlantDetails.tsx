@@ -58,7 +58,6 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
 
   useEffect(() => {
     if (avatarPhotoData) {
-      console.log("uploading photo");
       uploadAvatar(plantId, avatarPhotoData);
     }
   }, [avatarPhotoData]);
