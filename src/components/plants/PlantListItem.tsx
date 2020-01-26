@@ -16,6 +16,7 @@ interface Props extends NavigationProps {
 }
 
 const windowWidth = Dimensions.get("window").width;
+const gridItemDimension = windowWidth / 3;
 
 const styles = StyleSheet.create({
   plantItem: {
@@ -23,8 +24,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   plantItemImage: {
-    height: windowWidth / 3,
-    width: windowWidth / 3,
+    height: gridItemDimension,
+    width: gridItemDimension,
+  },
+  plantName: {
+    width: gridItemDimension,
   },
 });
 
@@ -40,7 +44,9 @@ const PlantListItem: FunctionComponent<Props> = ({ plant, navigation }) => {
           source={plant.avatar}
           imageStyle={styles.plantItemImage}
         />
-        <Text>{plant.name}</Text>
+        <Text style={styles.plantName} numberOfLines={1} ellipsizeMode="tail">
+          {plant.name}
+        </Text>
       </View>
     </TouchableOpacity>
   );
