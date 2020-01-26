@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
-  capture: {
+  captureButton: {
     flex: 0,
     backgroundColor: "#fff",
     borderRadius: 5,
@@ -24,6 +24,12 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     margin: 20,
   },
+  captureContainer: {
+    flex: 0,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  captureText: { fontSize: 14 },
 });
 
 const takePicture = async (
@@ -62,23 +68,19 @@ const Camera: FunctionComponent<NavigationProps> = ({ navigation }) => {
           if (status !== "READY") {
             return <Text>Loading Camera...</Text>;
           } else {
+            const takePictureAndGoBack = (): void => {
+              takePicture(camera, onPictureTaken, cropSize).then(() => {
+                navigation.goBack();
+              });
+            };
+
             return (
-              <View
-                style={{
-                  flex: 0,
-                  flexDirection: "row",
-                  justifyContent: "center",
-                }}
-              >
+              <View style={styles.captureContainer}>
                 <TouchableOpacity
-                  onPress={(): void => {
-                    takePicture(camera, onPictureTaken, cropSize).then(() => {
-                      navigation.goBack();
-                    });
-                  }}
-                  style={styles.capture}
+                  onPress={takePictureAndGoBack}
+                  style={styles.captureButton}
                 >
-                  <Text style={{ fontSize: 14 }}> SNAP </Text>
+                  <Text style={styles.captureText}> SNAP </Text>
                 </TouchableOpacity>
               </View>
             );

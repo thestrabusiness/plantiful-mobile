@@ -5,11 +5,16 @@ import React, {
   SetStateAction,
   useEffect,
 } from "react";
-import { Text, View, Image, ScrollView } from "react-native";
+import { Text, View, Image, ScrollView, StyleSheet } from "react-native";
 
 import { NavigationProps } from "../Router";
 import Icon from "react-native-vector-icons/Octicons";
 import ImageStripItem from "./ImageStripItem";
+
+const styles = StyleSheet.create({
+  scrollView: { flexDirection: "row" },
+  image: { height: 100, width: 100 },
+});
 
 interface ImageAttachmentStripProps extends NavigationProps {
   setParentImages: Dispatch<SetStateAction<string[]>>;
@@ -20,6 +25,10 @@ const ImageAttachmentStrip: FunctionComponent<ImageAttachmentStripProps> = ({
   setParentImages,
 }) => {
   const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    setParentImages(images);
+  }, [images]);
 
   const addImageToList = (image: string): void => {
     setImages([...images, image]);
@@ -32,22 +41,18 @@ const ImageAttachmentStrip: FunctionComponent<ImageAttachmentStripProps> = ({
     setImages(filteredImages);
   };
 
-  useEffect(() => {
-    setParentImages(images);
-  }, [images]);
+  const navigateToCameraScreen = (): void => {
+    navigation.navigate("Camera", {
+      onPictureTaken: addImageToList,
+      cropSize: 1000,
+    });
+  };
 
   return (
     <View>
       <Text>Include a photo</Text>
-      <ScrollView horizontal={true} style={{ flexDirection: "row" }}>
-        <ImageStripItem
-          onPress={(): void => {
-            navigation.navigate("Camera", {
-              onPictureTaken: addImageToList,
-              cropSize: 1000,
-            });
-          }}
-        >
+      <ScrollView horizontal={true} style={styles.scrollView}>
+        <ImageStripItem onPress={navigateToCameraScreen}>
           <Icon name="plus" color="white" size={40} />
         </ImageStripItem>
         {images.map((image, index) => {
@@ -58,10 +63,7 @@ const ImageAttachmentStrip: FunctionComponent<ImageAttachmentStripProps> = ({
                 removeImageFromList(index);
               }}
             >
-              <Image
-                source={{ uri: image }}
-                style={{ height: 100, width: 100 }}
-              />
+              <Image source={{ uri: image }} style={styles.image} />
             </ImageStripItem>
           );
         })}

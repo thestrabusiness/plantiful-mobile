@@ -1,5 +1,16 @@
 import React, { FunctionComponent, ReactElement } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "black",
+    height: 100,
+    width: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 1,
+  },
+});
 
 interface ImageStripItemProps {
   onPress?: () => void;
@@ -11,17 +22,7 @@ const ImageStripItem: FunctionComponent<ImageStripItemProps> = ({
   children,
 }) => {
   return (
-    <TouchableOpacity
-      style={{
-        backgroundColor: "black",
-        height: 100,
-        width: 100,
-        justifyContent: "center",
-        alignItems: "center",
-        marginHorizontal: 1,
-      }}
-      onPress={onPress}
-    >
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       {children}
     </TouchableOpacity>
   );

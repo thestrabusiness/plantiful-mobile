@@ -1,9 +1,14 @@
+interface PhotoUrl {
+  preview: string;
+  original: string;
+}
+
 interface CheckIn {
   created_at: number;
   fertilized: boolean;
   id: number;
   notes: string;
-  photo_urls: string[];
+  photo_urls: PhotoUrl[];
   plant_id: number;
   watered: boolean;
 }
@@ -40,4 +45,4 @@ interface User {
   shared_gardens: Garden[];
 }
 
-export { Plant, User, CheckIn, Garden };
+export { PhotoUrl, Plant, User, CheckIn, Garden };
