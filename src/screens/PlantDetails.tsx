@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import {Dimensions, Text, TouchableOpacity, View, StyleSheet, ScrollView} from "react-native";
 
-import CheckInList from "../components/plants/CheckInList";
+import CheckInList from "../components/CheckIn/List";
 import { NavigationProps } from "../components/Router";
 import { fetchPlant, uploadAvatar } from "../api/Api";
 import { Plant } from "../api/Types";

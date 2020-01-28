@@ -22,9 +22,9 @@ import { getGarden } from "../api/Api";
 import { User, Garden } from "../api/Types";
 import { Page } from "../components/Page";
 import { NavigationProps } from "../components/Router";
-import PlantListItem from "../components/plants/PlantListItem";
+import PlantListItem from "../components/Plant/ListItem";
 import { onSignOut, retrieveCurrentUser } from "../Session";
-import LoadingMessage from "../components/plants/LoadingMessage";
+import LoadingMessage from "../components/Plant/LoadingMessage";
 import ActionButton from "../components/ActionButton";
 
 const windowWidth = Dimensions.get("window").width;
