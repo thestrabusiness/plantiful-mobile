@@ -1,7 +1,9 @@
 import React, { useState, ReactElement } from "react";
+import { createAppContainer } from "react-navigation";
+
 import { checkIfSignedIn } from "./src/Session";
 import AppNavigator from "./src/components/Router";
-import { createAppContainer } from "react-navigation";
+import ImageViewProvider from "./src/ImageViewProvider";
 
 const App = (): ReactElement => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -11,7 +13,11 @@ const App = (): ReactElement => {
 
   const AppContainer = createAppContainer(AppNavigator(isSignedIn));
 
-  return <AppContainer />;
+  return (
+    <ImageViewProvider>
+      <AppContainer />
+    </ImageViewProvider>
+  );
 };
 
 export default App;

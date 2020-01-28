@@ -4,9 +4,11 @@ import AsyncStorage from "@react-native-community/async-storage";
 import { getAuthenticationToken } from "../Session";
 import { Garden, User, Plant, CheckIn } from "./Types";
 
+// const baseApiUrl = "http://plantiful.herokuapp.com/api";
+
 const baseApiUrl =
   Platform.OS == "android"
-    ? "http://192.168.1.142:3000/api"
+    ? "http://10.0.2.2:3000/api"
     : "http://localhost:3000/api";
 
 const defaultHeaders = {
