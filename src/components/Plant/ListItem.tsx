@@ -24,10 +24,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   plantItemImage: {
+    borderRadius: 15,
     height: gridItemDimension,
     width: gridItemDimension,
   },
   plantName: {
+    textAlign: "center",
     width: gridItemDimension,
   },
 });
