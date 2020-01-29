@@ -25,30 +25,40 @@ interface NavigationProps {
   navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
-const SignedOut = createStackNavigator({
-  SignIn: {
-    screen: SignIn,
-    navigationOptions: {
-      title: "Sign In",
-      headerStyle,
-    },
-  },
-  SignUp: {
-    screen: SignUp,
-    navigationOptions: {
-      title: "Sign Up",
-      headerStyle,
-    },
-  },
-});
+interface OptionalNavigation {
+  navigation?: NavigationScreenProp<NavigationState, NavigationParams>;
+}
 
-const PlantsNavigationStack = createStackNavigator({
-  PlantList,
-  PlantForm,
-  PlantDetails,
-  PlantCheckIn,
-  Camera,
-});
+const SignedOut = createStackNavigator(
+  {
+    SignIn: {
+      screen: SignIn,
+      navigationOptions: {
+        title: "Sign In",
+        headerStyle,
+      },
+    },
+    SignUp: {
+      screen: SignUp,
+      navigationOptions: {
+        title: "Sign Up",
+        headerStyle,
+      },
+    },
+  },
+  { headerMode: "none" },
+);
+
+const PlantsNavigationStack = createStackNavigator(
+  {
+    PlantList,
+    PlantForm,
+    PlantDetails,
+    PlantCheckIn,
+    Camera,
+  },
+  { defaultNavigationOptions: { header: null } },
+);
 
 const SignedIn = createBottomTabNavigator({
   Home: {
@@ -75,5 +85,5 @@ const AppNavigator = (signedIn = false): NavigationNavigator<any, any> => {
   );
 };
 
-export { NavigationProps };
+export { NavigationProps, OptionalNavigation };
 export default AppNavigator;

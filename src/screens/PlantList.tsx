@@ -27,6 +27,7 @@ import { onSignOut, retrieveCurrentUser } from "../Session";
 import LoadingMessage from "../components/Plant/LoadingMessage";
 import ActionButton from "../components/ActionButton/Button";
 import ActionButtonContainer from "../components/ActionButton/Container";
+import Header from "../components/shared/Header";
 
 const windowWidth = Dimensions.get("window").width;
 const drawerWidth = 300;
@@ -73,7 +74,6 @@ const styles = StyleSheet.create({
   plantList: {
     alignItems: "center",
     width: windowWidth,
-    paddingBottom: 40,
   },
 });
 
@@ -136,20 +136,16 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
     );
   };
 
-  const ViewHeader = (): ReactElement => {
-    return (
-      <View style={[styles.header, styles.leftOfDrawer]}>
-        <TouchableOpacity
-          style={{ width: 30 }}
-          onPress={(): void => {
-            setMenuOpen(!menuOpen);
-          }}
-        >
-          <Icon name="three-bars" size={35} />
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  const GardenMenuButton = (
+    <TouchableOpacity
+      style={{ width: 30 }}
+      onPress={(): void => {
+        setMenuOpen(!menuOpen);
+      }}
+    >
+      <Icon name="three-bars" size={35} />
+    </TouchableOpacity>
+  );
 
   const SignOutButton = (): ReactElement => {
     return (
@@ -205,7 +201,6 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
             { transform: [{ translateX: viewTranslationX }] },
           ]}
         >
-          <ViewHeader />
           {children}
           <View style={styles.drawer}>
             {currentUser && (
@@ -229,35 +224,45 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
 
   if (garden && garden.plants.length > 0) {
     return (
-      <ViewWithDrawer>
-        <View style={[styles.plantList, styles.leftOfDrawer]}>
-          <AddPlantsButton />
-          <FlatList
-            contentInsetAdjustmentBehavior="automatic"
-            data={garden.plants}
-            renderItem={({ item }): ReactElement => (
-              <PlantListItem plant={item} navigation={navigation} />
-            )}
-            keyExtractor={(item): string => item.id.toString()}
-            numColumns={3}
-          />
-        </View>
-      </ViewWithDrawer>
+      <Page>
+        <Header title={garden.name} leftElement={GardenMenuButton} />
+        <ViewWithDrawer>
+          <View style={[styles.plantList, styles.leftOfDrawer]}>
+            <AddPlantsButton />
+            <FlatList
+              contentInsetAdjustmentBehavior="automatic"
+              data={garden.plants}
+              renderItem={({ item }): ReactElement => (
+                <PlantListItem plant={item} navigation={navigation} />
+              )}
+              keyExtractor={(item): string => item.id.toString()}
+              numColumns={3}
+            />
+          </View>
+        </ViewWithDrawer>
+      </Page>
     );
   } else if (garden && garden.plants.length == 0) {
     return (
-      <ViewWithDrawer>
-        <AddPlantsButton />
-        <View style={[styles.plantList, styles.leftOfDrawer]}>
-          <Text>
-            There are no plants in this garden! Click the + to add some new
-            friends.
-          </Text>
-        </View>
-      </ViewWithDrawer>
+      <Page>
+        <Header title={garden.name} leftElement={GardenMenuButton} />
+        <ViewWithDrawer>
+          <AddPlantsButton />
+          <View style={[styles.plantList, styles.leftOfDrawer]}>
+            <Text>
+              There are no plants in this garden! Click the + to add some new
+              friends.
+            </Text>
+          </View>
+        </ViewWithDrawer>
+      </Page>
     );
   } else {
-    return <LoadingMessage />;
+    return (
+      <Page>
+        <LoadingMessage />
+      </Page>
+    );
   }
 };
 

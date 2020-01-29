@@ -8,6 +8,8 @@ import { Plant } from "../api/Types";
 import ImageWithIndicator from "../components/shared/ImageWithIndicator";
 import ActionButton from "../components/ActionButton/Button";
 import ActionButtonContainer from "../components/ActionButton/Container";
+import {Page} from "../components/Page";
+import Header from '../components/shared/Header';
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -69,7 +71,8 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
 
   if (plant) {
     return (
-      <>
+      <Page>
+        <Header title={plant.name} navigation={navigation} />
         <ActionButtonContainer>
           <ActionButton
             iconName="pencil"
@@ -88,7 +91,6 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
         </ActionButtonContainer>
         <ScrollView style={styles.pageContainer}>
           <View style={styles.detailsContainer}>
-            <Text style={styles.plantName}>{plant.name}</Text>
             <TouchableOpacity onPress={(): void => {
               navigation.navigate(
                 "Camera",
@@ -106,7 +108,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
           </View>
           <CheckInList checkIns={plant.check_ins} />
         </ScrollView>
-      </>
+      </Page>
     );
   }
 

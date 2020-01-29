@@ -5,6 +5,7 @@ import { getAuthenticationToken } from "../Session";
 import { Garden, User, Plant, CheckIn } from "./Types";
 
 // const baseApiUrl = "http://plantiful.herokuapp.com/api";
+// const baseApiUrl = "http://plantiful-staging.herokuapp.com/api";
 
 const baseApiUrl =
   Platform.OS == "android"

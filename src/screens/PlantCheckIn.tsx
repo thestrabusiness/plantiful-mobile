@@ -5,17 +5,15 @@ import { createCheckIn } from "../api/Api";
 import SwitchInputField from "../components/shared/SwitchInputField";
 import { NavigationProps } from "../components/Router";
 import ImageAttachmentStrip from "../components/shared/ImageAttachmentStrip";
+import Header from "../components/shared/Header";
+import { Page } from "../components/Page";
 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
   },
-  header: {
-    height: "15%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   inputSection: {
+    paddingTop: 10,
     height: "80%",
     justifyContent: "space-between",
     alignContent: "space-between",
@@ -44,10 +42,8 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
     return <></>;
   } else {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text>Check In {plantName}</Text>
-        </View>
+      <Page style={styles.container}>
+        <Header title={`Check In ${plantName}`} navigation={navigation} />
         <View style={styles.inputSection}>
           <SwitchInputField
             label="Watered"
@@ -90,7 +86,7 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
             );
           }}
         />
-      </View>
+      </Page>
     );
   }
 };

@@ -2,7 +2,6 @@ import React, { ReactElement, useState, FunctionComponent } from "react";
 import {
   Dimensions,
   View,
-  Text,
   TextInput,
   Picker,
   StyleSheet,
@@ -13,6 +12,7 @@ import NumericInput from "react-native-numeric-input";
 import { NavigationStackProp } from "react-navigation-stack";
 
 import { Page } from "../components/Page";
+import Header from "../components/shared/Header";
 import { createPlant, updatePlant } from "../api/Api";
 import { Plant } from "../api/Types";
 
@@ -21,11 +21,6 @@ const windowWidth = Dimensions.get("window").width;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
-  },
-  formTitle: {
-    fontSize: 36,
-    alignSelf: "center",
-    margin: 10,
   },
   inputField: {
     height: 40,
@@ -126,14 +121,13 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
 
   return (
     <Page style={styles.container}>
-      <Text style={styles.formTitle}>{pageTitle}</Text>
+      <Header title={pageTitle} navigation={navigation} />
       {imageAvailable && (
         <Image
           source={{ uri: image || plant.avatar }}
           style={styles.plantImage}
         />
       )}
-      <Button title={buttonText} onPress={navigateToCameraScreen} />
       <TextInput
         style={[styles.inputField, styles.formSpacing]}
         placeholder={"Name"}
@@ -162,6 +156,7 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
           <Picker.Item label={weekLabel} value="week" />
         </Picker>
       </View>
+      <Button title={buttonText} onPress={navigateToCameraScreen} />
       <Button
         title="Submit"
         onPress={(): void => {
