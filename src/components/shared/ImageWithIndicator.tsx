@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import FastImage from "react-native-fast-image";
+import { avatarUri } from "../../fixtures/AvatarPlaceholder";
 
 interface Props {
   source: string;
@@ -33,7 +34,7 @@ const ImageWithIndicator: FunctionComponent<Props> = ({
         <ActivityIndicator size="large" style={styles.indicatorStyle} />
       )}
       <FastImage
-        source={{ uri: source }}
+        source={{ uri: source || avatarUri }}
         style={imageStyle}
         onLoadEnd={(): void => {
           setLoading(false);

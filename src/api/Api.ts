@@ -21,6 +21,7 @@ const createPlant = async (
   name: string,
   checkFrequencyUnit: string,
   checkFrequencyScalar: number,
+  avatar: string | null,
 ): Promise<Plant | void> => {
   const authToken = await getAuthenticationToken();
 
@@ -35,6 +36,7 @@ const createPlant = async (
         name,
         check_frequency_scalar: checkFrequencyScalar,
         check_frequency_unit: checkFrequencyUnit,
+        avatar,
       },
     }),
   })

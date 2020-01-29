@@ -1,11 +1,13 @@
 import React, { ReactElement, useState, FunctionComponent } from "react";
 import {
+  Dimensions,
   View,
   Text,
   TextInput,
   Picker,
   StyleSheet,
   Button,
+  Image,
 } from "react-native";
 import NumericInput from "react-native-numeric-input";
 import { NavigationStackProp } from "react-navigation-stack";
@@ -13,7 +15,17 @@ import { NavigationStackProp } from "react-navigation-stack";
 import { Page } from "../components/Page";
 import { createPlant } from "../api/Api";
 
+const windowWidth = Dimensions.get("window").width;
+
 const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 10,
+  },
+  formTitle: {
+    fontSize: 36,
+    alignSelf: "center",
+    margin: 10,
+  },
   inputField: {
     height: 40,
     borderColor: "black",
@@ -33,6 +45,11 @@ const styles = StyleSheet.create({
   formSpacing: {
     marginTop: 30,
   },
+  plantImage: {
+    alignSelf: "center",
+    height: windowWidth * 0.5,
+    width: windowWidth * 0.5,
+  },
 });
 
 const pluralize = (string: string, count: number): string => {
@@ -48,6 +65,7 @@ const submitForm = (
   name: string,
   checkFrequencyUnit: string,
   checkFrequencyScalar: number,
+  image: string | null,
   navigation: NavigationStackProp,
 ): void => {
   const postResult = createPlant(
@@ -55,6 +73,7 @@ const submitForm = (
     name,
     checkFrequencyUnit,
     checkFrequencyScalar,
+    image,
   );
 
   if (postResult) {
@@ -74,13 +93,22 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
   const [name, setName] = useState("");
   const [checkFrequencyScalar, setCheckFrequencyScalar] = useState(1);
   const [checkFrequencyUnit, setCheckFrequencyUnit] = useState("day");
+  const [image, setImage] = useState(null);
 
   const dayLabel = pluralize("Day", checkFrequencyScalar);
   const weekLabel = pluralize("Week", checkFrequencyScalar);
 
+  const navigateToCameraScreen = (): void => {
+    navigation.navigate("Camera", { onPictureTaken: setImage, cropSize: 300 });
+  };
+
+  const buttonText = !!image ? "Change photo" : "Add a photo";
+
   return (
-    <Page>
-      <Text> Add a plant!</Text>
+    <Page style={styles.container}>
+      <Text style={styles.formTitle}>Add a plant!</Text>
+      {image && <Image source={{ uri: image }} style={styles.plantImage} />}
+      <Button title={buttonText} onPress={navigateToCameraScreen} />
       <TextInput
         style={[styles.inputField, styles.formSpacing]}
         placeholder={"Name"}
@@ -117,6 +145,7 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
             name,
             checkFrequencyUnit,
             checkFrequencyScalar,
+            image,
             navigation,
           );
         }}
