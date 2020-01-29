@@ -6,7 +6,8 @@ import { NavigationProps } from "../components/Router";
 import { fetchPlant, uploadAvatar } from "../api/Api";
 import { Plant } from "../api/Types";
 import ImageWithIndicator from "../components/shared/ImageWithIndicator";
-import ActionButton from "../components/ActionButton";
+import ActionButton from "../components/ActionButton/Button";
+import ActionButtonContainer from "../components/ActionButton/Container";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -69,11 +70,22 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   if (plant) {
     return (
       <>
-        <ActionButton
-          onPress={(): void => {
-            navigation.navigate("PlantCheckIn", {plantId, plantName});
-          }}
-        />
+        <ActionButtonContainer>
+          <ActionButton
+            iconName="pencil"
+            iconSize={40}
+            onPress={(): void => {
+              console.log("edit plant");
+            }}
+          />
+          <ActionButton
+            iconName="check"
+            iconSize={60}
+            onPress={(): void => {
+              navigation.navigate("PlantCheckIn", {plantId, plantName});
+            }}
+          />
+        </ActionButtonContainer>
         <ScrollView style={styles.pageContainer}>
           <View style={styles.detailsContainer}>
             <Text style={styles.plantName}>{plant.name}</Text>

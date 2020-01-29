@@ -25,7 +25,8 @@ import { NavigationProps } from "../components/Router";
 import PlantListItem from "../components/Plant/ListItem";
 import { onSignOut, retrieveCurrentUser } from "../Session";
 import LoadingMessage from "../components/Plant/LoadingMessage";
-import ActionButton from "../components/ActionButton";
+import ActionButton from "../components/ActionButton/Button";
+import ActionButtonContainer from "../components/ActionButton/Container";
 
 const windowWidth = Dimensions.get("window").width;
 const drawerWidth = 300;
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
   animatedView: {
     left: -drawerWidth,
     width: drawerWidth + windowWidth,
+    height: "100%",
   },
   drawer: {
     position: "absolute",
@@ -69,9 +71,9 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   plantList: {
-    height: "100%",
     alignItems: "center",
     width: windowWidth,
+    paddingBottom: 40,
   },
 });
 
@@ -119,13 +121,18 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
 
   const AddPlantsButton = (): ReactElement => {
     return (
-      <ActionButton
-        onPress={(): void => {
-          navigation.navigate("PlantForm", {
-            gardenId: garden && garden.id.toString(),
-          });
-        }}
-      />
+      <ActionButtonContainer>
+        <ActionButton
+          style={{ marginBottom: 40 }}
+          iconName="plus-small"
+          iconSize={70}
+          onPress={(): void => {
+            navigation.navigate("PlantForm", {
+              gardenId: garden && garden.id.toString(),
+            });
+          }}
+        />
+      </ActionButtonContainer>
     );
   };
 

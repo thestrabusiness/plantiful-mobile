@@ -16,14 +16,11 @@ const styles = StyleSheet.create({
   actionButton: {
     alignItems: "center",
     backgroundColor: "green",
-    bottom: 90,
     borderRadius: 100,
-    position: "absolute",
     height: 70,
     justifyContent: "center",
-    right: 10,
     width: 70,
-    zIndex: 2,
+    marginVertical: 5,
   },
   shadow: {
     ...elevationShadowStyle(5),
@@ -34,18 +31,26 @@ const styles = StyleSheet.create({
 });
 
 interface ActionButtonProps {
+  iconName: string;
+  iconSize: number;
   onPress: () => void;
+  style?: ViewStyle;
 }
 
-const ActionButton: FunctionComponent<ActionButtonProps> = ({ onPress }) => {
+const ActionButton: FunctionComponent<ActionButtonProps> = ({
+  iconName,
+  iconSize,
+  onPress,
+  style,
+}) => {
   return (
     <TouchableOpacity
-      style={[styles.actionButton, styles.shadow]}
+      style={[styles.actionButton, styles.shadow, style]}
       onPress={onPress}
       activeOpacity={0.9}
     >
       <View>
-        <Icon name="plus-small" size={70} style={styles.plus} />
+        <Icon name={iconName} size={iconSize} style={styles.plus} />
       </View>
     </TouchableOpacity>
   );
