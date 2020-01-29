@@ -58,6 +58,48 @@ const createPlant = async (
     .catch((error: Error): void => console.error(error.message));
 };
 
+const updatePlant = async (
+  plantId: number,
+  name: string,
+  checkFrequencyUnit: string,
+  checkFrequencyScalar: number,
+  avatar: string | null,
+): Promise<Plant | void> => {
+  const authToken = await getAuthenticationToken();
+
+  return fetch(`${baseApiUrl}/plants/${plantId}`, {
+    method: "PUT",
+    headers: {
+      ...defaultHeaders,
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      plant: {
+        name,
+        check_frequency_scalar: checkFrequencyScalar,
+        check_frequency_unit: checkFrequencyUnit,
+        avatar,
+      },
+    }),
+  })
+    .then(
+      (response: Response): Promise<Plant | undefined> => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status == 401) {
+          AsyncStorage.removeItem("authentication_token");
+          return undefined;
+        } else {
+          throw Error(response.statusText);
+        }
+      },
+    )
+    .then((result: Plant | undefined): Plant | undefined => {
+      return result;
+    })
+    .catch((error: Error): void => console.error(error.message));
+};
+
 const fetchPlant = async (plantId: number): Promise<Plant | void> => {
   const authToken = await getAuthenticationToken();
 
@@ -253,4 +295,5 @@ export {
   signOut,
   signUp,
   uploadAvatar,
+  updatePlant,
 };

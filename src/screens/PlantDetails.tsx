@@ -75,7 +75,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
             iconName="pencil"
             iconSize={40}
             onPress={(): void => {
-              console.log("edit plant");
+              navigation.navigate("PlantForm", {plant: JSON.stringify(plant)});
             }}
           />
           <ActionButton

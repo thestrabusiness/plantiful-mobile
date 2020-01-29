@@ -13,7 +13,8 @@ import NumericInput from "react-native-numeric-input";
 import { NavigationStackProp } from "react-navigation-stack";
 
 import { Page } from "../components/Page";
-import { createPlant } from "../api/Api";
+import { createPlant, updatePlant } from "../api/Api";
+import { Plant } from "../api/Types";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -61,6 +62,7 @@ const pluralize = (string: string, count: number): string => {
 };
 
 const submitForm = (
+  plantId: number | undefined,
   gardenId: number,
   name: string,
   checkFrequencyUnit: string,
@@ -68,15 +70,26 @@ const submitForm = (
   image: string | null,
   navigation: NavigationStackProp,
 ): void => {
-  const postResult = createPlant(
-    gardenId,
-    name,
-    checkFrequencyUnit,
-    checkFrequencyScalar,
-    image,
-  );
+  let requestResult;
+  if (plantId) {
+    requestResult = updatePlant(
+      plantId,
+      name,
+      checkFrequencyUnit,
+      checkFrequencyScalar,
+      image,
+    );
+  } else {
+    requestResult = createPlant(
+      gardenId,
+      name,
+      checkFrequencyUnit,
+      checkFrequencyScalar,
+      image,
+    );
+  }
 
-  if (postResult) {
+  if (requestResult) {
     navigation.navigate("PlantList");
   }
 };
@@ -89,10 +102,15 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
   navigation,
 }): ReactElement => {
   const gardenId = parseInt(navigation.getParam("gardenId", "0"));
+  const plant: Plant = JSON.parse(navigation.getParam("plant", "{}"));
 
-  const [name, setName] = useState("");
-  const [checkFrequencyScalar, setCheckFrequencyScalar] = useState(1);
-  const [checkFrequencyUnit, setCheckFrequencyUnit] = useState("day");
+  const [name, setName] = useState(plant.name || "");
+  const [checkFrequencyScalar, setCheckFrequencyScalar] = useState(
+    plant.check_frequency_scalar || 1,
+  );
+  const [checkFrequencyUnit, setCheckFrequencyUnit] = useState(
+    plant.check_frequency_unit || "day",
+  );
   const [image, setImage] = useState(null);
 
   const dayLabel = pluralize("Day", checkFrequencyScalar);
@@ -102,12 +120,19 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
     navigation.navigate("Camera", { onPictureTaken: setImage, cropSize: 300 });
   };
 
-  const buttonText = !!image ? "Change photo" : "Add a photo";
+  const imageAvailable = !!image || !!plant.avatar;
+  const buttonText = imageAvailable ? "Change photo" : "Add a photo";
+  const pageTitle = !!plant.id ? `Edit ${plant.name}` : "Add a plant!";
 
   return (
     <Page style={styles.container}>
-      <Text style={styles.formTitle}>Add a plant!</Text>
-      {image && <Image source={{ uri: image }} style={styles.plantImage} />}
+      <Text style={styles.formTitle}>{pageTitle}</Text>
+      {imageAvailable && (
+        <Image
+          source={{ uri: image || plant.avatar }}
+          style={styles.plantImage}
+        />
+      )}
       <Button title={buttonText} onPress={navigateToCameraScreen} />
       <TextInput
         style={[styles.inputField, styles.formSpacing]}
@@ -141,6 +166,7 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
         title="Submit"
         onPress={(): void => {
           submitForm(
+            plant.id,
             gardenId,
             name,
             checkFrequencyUnit,
