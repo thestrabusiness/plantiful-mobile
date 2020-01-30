@@ -29,6 +29,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     width: DRAWER_WIDTH,
     flexDirection: "column",
+    justifyContent: "space-between",
+    paddingBottom: 10,
   },
 });
 
@@ -71,22 +73,24 @@ const ViewWithDrawer: FunctionComponent<DrawerProps> = ({
     >
       {children}
       <View style={styles.drawer}>
-        {currentUser && (
-          <DrawerSection
-            setMenuOpen={setMenuOpen}
-            setCurrentGardenId={setCurrentGardenId}
-            gardens={currentUser.owned_gardens}
-            title="Your Gardens"
-          />
-        )}
-        {currentUser && (
-          <DrawerSection
-            setMenuOpen={setMenuOpen}
-            setCurrentGardenId={setCurrentGardenId}
-            gardens={currentUser.shared_gardens}
-            title="Shared Gardens"
-          />
-        )}
+        <View>
+          {currentUser && (
+            <DrawerSection
+              setMenuOpen={setMenuOpen}
+              setCurrentGardenId={setCurrentGardenId}
+              gardens={currentUser.owned_gardens}
+              title="Your Gardens"
+            />
+          )}
+          {currentUser && (
+            <DrawerSection
+              setMenuOpen={setMenuOpen}
+              setCurrentGardenId={setCurrentGardenId}
+              gardens={currentUser.shared_gardens}
+              title="Shared Gardens"
+            />
+          )}
+        </View>
         <SignOutButton navigation={navigation} />
       </View>
     </Animated.View>
