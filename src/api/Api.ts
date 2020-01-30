@@ -199,6 +199,39 @@ const createCheckIn = async (
     .catch((error: Error): void => console.error(error.message));
 };
 
+const createGarden = async (name: string): Promise<Garden | void> => {
+  const authToken = await getAuthenticationToken();
+
+  return fetch(`${baseApiUrl}/gardens`, {
+    method: "POST",
+    headers: {
+      ...defaultHeaders,
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: JSON.stringify({
+      garden: {
+        name,
+      },
+    }),
+  })
+    .then(
+      (response: Response): Promise<Garden | undefined> => {
+        if (response.ok) {
+          return response.json();
+        } else if (response.status == 401) {
+          AsyncStorage.removeItem("authentication_token");
+          return undefined;
+        } else {
+          throw Error(response.statusText);
+        }
+      },
+    )
+    .then((result: Garden | undefined): Garden | undefined => {
+      return result;
+    })
+    .catch((error: Error): void => console.error(error.message));
+};
+
 const uploadAvatar = async (
   plantId: number,
   photoData: string | null,
@@ -290,6 +323,7 @@ const signUp = (
 export {
   createCheckIn,
   createPlant,
+  createGarden,
   fetchPlant,
   getGarden,
   signIn,

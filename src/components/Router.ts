@@ -16,6 +16,7 @@ import PlantForm from "../screens/PlantForm";
 import PlantDetails from "../screens/PlantDetails";
 import PlantCheckIn from "../screens/PlantCheckIn";
 import Camera from "../screens/Camera";
+import GardenForm from "../screens/GardenForm";
 
 const headerStyle = {
   marginTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
@@ -56,6 +57,7 @@ const PlantsNavigationStack = createStackNavigator(
     PlantDetails,
     PlantCheckIn,
     Camera,
+    GardenForm,
   },
   { defaultNavigationOptions: { header: null } },
 );

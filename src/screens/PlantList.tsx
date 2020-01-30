@@ -34,6 +34,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: windowWidth,
   },
+  noPlantsMessageContainer: {
+    height: "100%",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+  },
+  noPlantsMessageText: { fontSize: 18, textAlign: "center" },
 });
 
 const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
@@ -92,7 +98,7 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
     </TouchableOpacity>
   );
 
-  if (garden) {
+  if (garden && currentUser) {
     return (
       <Page>
         <Header title={garden.name} leftElement={GardenMenuButton} />
@@ -116,10 +122,12 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
               />
             )}
             {garden.plants.length == 0 && (
-              <Text>
-                There are no plants in this garden! Click the + to add some new
-                friends.
-              </Text>
+              <View style={styles.noPlantsMessageContainer}>
+                <Text style={styles.noPlantsMessageText}>
+                  There are no plants in this garden! Click the + to add some
+                  new friends.
+                </Text>
+              </View>
             )}
           </View>
         </ViewWithDrawer>

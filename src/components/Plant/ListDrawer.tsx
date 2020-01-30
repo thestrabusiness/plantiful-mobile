@@ -5,7 +5,7 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { Dimensions, View, Animated, StyleSheet } from "react-native";
+import { Button, Dimensions, View, Animated, StyleSheet } from "react-native";
 
 import { User } from "../../api/Types";
 import DrawerSection from "./DrawerSection";
@@ -30,12 +30,12 @@ const styles = StyleSheet.create({
     width: DRAWER_WIDTH,
     flexDirection: "column",
     justifyContent: "space-between",
-    paddingBottom: 10,
+    paddingHorizontal: 10,
   },
 });
 
 interface DrawerProps extends NavigationProps {
-  currentUser?: User;
+  currentUser: User;
   setCurrentGardenId: Dispatch<SetStateAction<number>>;
   setMenuOpen: Dispatch<SetStateAction<boolean>>;
   menuOpen: boolean;
@@ -64,6 +64,11 @@ const ViewWithDrawer: FunctionComponent<DrawerProps> = ({
     outputRange: [DRAWER_WIDTH, 0],
   });
 
+  const afterGardenCreation = (newGardenId: number): void => {
+    setMenuOpen(false);
+    setCurrentGardenId(newGardenId);
+  };
+
   return (
     <Animated.View
       style={[
@@ -74,24 +79,32 @@ const ViewWithDrawer: FunctionComponent<DrawerProps> = ({
       {children}
       <View style={styles.drawer}>
         <View>
-          {currentUser && (
-            <DrawerSection
-              setMenuOpen={setMenuOpen}
-              setCurrentGardenId={setCurrentGardenId}
-              gardens={currentUser.owned_gardens}
-              title="Your Gardens"
-            />
-          )}
-          {currentUser && (
-            <DrawerSection
-              setMenuOpen={setMenuOpen}
-              setCurrentGardenId={setCurrentGardenId}
-              gardens={currentUser.shared_gardens}
-              title="Shared Gardens"
-            />
-          )}
+          <DrawerSection
+            setMenuOpen={setMenuOpen}
+            setCurrentGardenId={setCurrentGardenId}
+            gardens={currentUser.owned_gardens}
+            title="Your Gardens"
+          />
+          <DrawerSection
+            setMenuOpen={setMenuOpen}
+            setCurrentGardenId={setCurrentGardenId}
+            gardens={currentUser.shared_gardens}
+            title="Shared Gardens"
+          />
         </View>
-        <SignOutButton navigation={navigation} />
+        <View style={{ marginBottom: 10 }}>
+          <View style={{ marginBottom: 10 }}>
+            <Button
+              title="Create a new garden"
+              onPress={(): void => {
+                navigation.navigate("GardenForm", {
+                  afterCreate: afterGardenCreation,
+                });
+              }}
+            />
+          </View>
+          <SignOutButton navigation={navigation} />
+        </View>
       </View>
     </Animated.View>
   );
