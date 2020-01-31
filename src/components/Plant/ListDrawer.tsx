@@ -5,21 +5,20 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { Button, Dimensions, View, Animated, StyleSheet } from "react-native";
+import { Button, View, Animated, StyleSheet } from "react-native";
 
 import { User } from "../../api/Types";
 import DrawerSection from "./DrawerSection";
 import { NavigationProps } from "../Router";
 import SignOutButton from "../shared/SignOutButton";
 
-const windowWidth = Dimensions.get("window").width;
-const DRAWER_WIDTH = 300;
+import { Layout } from "../../styles";
 
 const styles = StyleSheet.create({
   animatedView: {
     flex: 1,
-    left: -DRAWER_WIDTH,
-    width: DRAWER_WIDTH + windowWidth,
+    left: -Layout.drawerWidth,
+    width: Layout.drawerWidth + Layout.screenWidth,
     height: "100%",
   },
   drawer: {
@@ -27,7 +26,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     bottom: 0,
-    width: DRAWER_WIDTH,
+    width: Layout.drawerWidth,
     flexDirection: "column",
     justifyContent: "space-between",
     paddingHorizontal: 10,
@@ -61,7 +60,7 @@ const ViewWithDrawer: FunctionComponent<DrawerProps> = ({
 
   const viewTranslationX = viewPosition.interpolate({
     inputRange: [0, 1],
-    outputRange: [DRAWER_WIDTH, 0],
+    outputRange: [Layout.drawerWidth, 0],
   });
 
   const afterGardenCreation = (newGardenId: number): void => {
@@ -110,5 +109,4 @@ const ViewWithDrawer: FunctionComponent<DrawerProps> = ({
   );
 };
 
-export { DRAWER_WIDTH };
 export default ViewWithDrawer;

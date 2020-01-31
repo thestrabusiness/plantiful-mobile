@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
 import {
-  Dimensions,
   Text,
   TouchableOpacity,
   View,
@@ -21,8 +20,7 @@ import Header from "../components/shared/Header";
 import LoadingMessage from "../components/Plant/LoadingMessage";
 import useDidFocus from "../useDidFocus";
 
-const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+import { Layout } from "../styles";
 
 const styles = StyleSheet.create({
   pageContainer: {
@@ -30,15 +28,15 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     alignItems: "center",
-    height: windowHeight * 0.33,
+    height: Layout.screenHeight * 0.33,
     justifyContent: "space-around",
   },
   plantName: {
     fontSize: 24,
   },
   plantImage: {
-    height: windowWidth * 0.5,
-    width: windowWidth * 0.5,
+    height: Layout.screenWidth * 0.5,
+    width: Layout.screenWidth * 0.5,
   },
   checkInHeader: {
     fontSize: 18,

@@ -9,7 +9,6 @@ import {
   View,
   FlatList,
   Text,
-  Dimensions,
   TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/Octicons";
@@ -28,17 +27,16 @@ import Header from "../components/shared/Header";
 import ViewWithDrawer from "../components/Plant/ListDrawer";
 import useDidFocus from "../useDidFocus";
 
-const windowWidth = Dimensions.get("window").width;
-const drawerWidth = 300;
+import { Layout } from "../styles";
 
 const styles = StyleSheet.create({
   rightOfDrawer: {
-    left: drawerWidth,
+    left: Layout.drawerWidth,
   },
   plantList: {
     flex: 1,
     alignItems: "center",
-    width: windowWidth,
+    width: Layout.screenWidth,
   },
   noPlantsMessageContainer: {
     height: "100%",

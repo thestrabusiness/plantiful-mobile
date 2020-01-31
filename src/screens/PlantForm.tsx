@@ -1,6 +1,5 @@
 import React, { ReactElement, useState, FunctionComponent } from "react";
 import {
-  Dimensions,
   View,
   TextInput,
   Picker,
@@ -17,7 +16,7 @@ import Header from "../components/shared/Header";
 import { createPlant, handleError, updatePlant } from "../api/Api";
 import { Plant } from "../api/Types";
 
-const windowWidth = Dimensions.get("window").width;
+import { Layout } from "../styles";
 
 const styles = StyleSheet.create({
   container: {
@@ -44,8 +43,8 @@ const styles = StyleSheet.create({
   },
   plantImage: {
     alignSelf: "center",
-    height: windowWidth * 0.5,
-    width: windowWidth * 0.5,
+    height: Layout.screenWidth * 0.5,
+    width: Layout.screenWidth * 0.5,
   },
 });
 

@@ -1,21 +1,21 @@
 import React, { useState } from "react";
 import { ReactElement } from "react";
-import { StyleSheet, Button, Dimensions, TextInput } from "react-native";
+import { StyleSheet, Button, TextInput } from "react-native";
 import { NavigationStackProp } from "react-navigation-stack";
 import Toast from "react-native-simple-toast";
 
 import { Page } from "../components/Page";
 import { onSignUp } from "../Session";
 
+import { Layout } from "../styles";
+
 interface Props {
   navigation: NavigationStackProp;
 }
 
-const windowHeight = Dimensions.get("window").height;
-
 const styles = StyleSheet.create({
   container: {
-    height: windowHeight,
+    height: Layout.screenHeight,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 10,

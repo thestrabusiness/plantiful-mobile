@@ -1,22 +1,17 @@
 import React, { FunctionComponent } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 
 import { NavigationProps } from "../Router";
 import { Plant } from "../../api/Types";
 import ImageWithIndicator from "../shared/ImageWithIndicator";
 
+import { Layout } from "../../styles";
+
 interface Props extends NavigationProps {
   plant: Plant;
 }
 
-const windowWidth = Dimensions.get("window").width;
-const gridItemDimension = windowWidth / 3;
+const gridItemDimension = Layout.screenWidth / 3;
 
 const styles = StyleSheet.create({
   plantItem: {

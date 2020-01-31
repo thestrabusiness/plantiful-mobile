@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import { ReactElement } from "react";
-import { StyleSheet, Button, Dimensions, Text, View } from "react-native";
+import { TextInput, StyleSheet, Button, Text, View } from "react-native";
+import { NavigationStackProp } from "react-navigation-stack";
+
 import { Page } from "../components/Page";
 import { onSignIn } from "../Session";
-import { NavigationStackProp } from "react-navigation-stack";
-import { TextInput } from "react-native-gesture-handler";
+
+import { Layout } from "../styles";
 
 interface Props {
   navigation: NavigationStackProp;
 }
 
-const windowHeight = Dimensions.get("window").height;
-
 const styles = StyleSheet.create({
   container: {
-    height: windowHeight,
+    height: Layout.screenHeight,
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 10,
