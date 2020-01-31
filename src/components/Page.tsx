@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { FunctionComponent } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -10,8 +10,8 @@ import {
 
 interface PageProps {
   style?: StyleProp<ViewStyle>;
-  children: ReactElement | ReactElement[];
   testID?: string;
+  children: React.ReactNode;
 }
 
 const styles = StyleSheet.create({
@@ -23,15 +23,21 @@ const styles = StyleSheet.create({
   },
 });
 
-const Page = ({ style, children, testID }: PageProps): ReactElement => (
-  <>
-    <StatusBar />
-    <SafeAreaView style={styles.container}>
-      <View style={[styles.page, style]} testID={testID}>
-        {children}
-      </View>
-    </SafeAreaView>
-  </>
-);
+const Page: FunctionComponent<PageProps> = ({
+  style,
+  children,
+  testID,
+}: PageProps) => {
+  return (
+    <>
+      <StatusBar />
+      <SafeAreaView style={styles.container}>
+        <View style={[styles.page, style]} testID={testID}>
+          {children}
+        </View>
+      </SafeAreaView>
+    </>
+  );
+};
 
 export { Page };

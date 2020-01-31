@@ -126,22 +126,15 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
   const photoButtonText = imageAvailable ? "Change photo" : "Add a photo";
   const pageTitle = !!plant.id ? `Edit ${plant.name}` : "Add a plant!";
 
-  const Avatar = (): ReactElement => {
-    if (imageAvailable) {
-      return (
+  return (
+    <Page style={styles.container}>
+      <Header title={pageTitle} navigation={navigation} />
+      {imageAvailable && (
         <Image
           source={{ uri: image || plant.avatar }}
           style={styles.plantImage}
         />
-      );
-    }
-    return <></>;
-  };
-
-  return (
-    <Page style={styles.container}>
-      <Header title={pageTitle} navigation={navigation} />
-      <Avatar />
+      )}
       <TextInput
         style={[styles.inputField, styles.formSpacing]}
         placeholder={"Name"}
