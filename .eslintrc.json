@@ -18,6 +18,7 @@
     "space-before-function-paren": ["error", "always"],
     "camelcase": "off",
     "@typescript-eslint/camelcase": ["error", { "properties": "never" }],
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "operator-linebreak": "off"
   }
 }

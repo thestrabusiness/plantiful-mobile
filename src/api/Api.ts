@@ -17,46 +17,82 @@ const defaultHeaders = {
   "session-type": "mobile",
 };
 
+interface APIError {
+  message: string;
+}
+
+interface APIResponse<T> {
+  data: T | null;
+  error: APIError | null;
+}
+
+const baseRequest = async <T>(
+  url: string,
+  headers: any,
+  method: string,
+  body: any = null,
+): Promise<APIResponse<T>> => {
+  return fetch(url, { method, headers, body })
+    .then((response: Response): Promise<any> | undefined => {
+      if (response.ok) {
+        return response.json();
+      } else if (response.status == 401) {
+        AsyncStorage.removeItem("authentication_token");
+        throw new Error("You aren't signed in");
+      }
+
+      return undefined;
+    })
+    .then((result: T) => {
+      if (result) {
+        return { data: result, error: null };
+      } else {
+        return {
+          data: null,
+          error: { message: "Something went wrong" },
+        };
+      }
+    })
+    .catch(error => {
+      return { data: null, error };
+    });
+};
+
+const authenticatedRequest = async <T>(
+  url: string,
+  method: string,
+  body: any = null,
+): Promise<APIResponse<T>> => {
+  const authToken = await getAuthenticationToken();
+  const headers = {
+    ...defaultHeaders,
+    Authorization: `Bearer ${authToken}`,
+  };
+
+  return baseRequest(url, headers, method, body);
+};
+
 const createPlant = async (
   gardenId: number,
   name: string,
   checkFrequencyUnit: string,
   checkFrequencyScalar: number,
   avatar: string | null,
-): Promise<Plant | void> => {
-  const authToken = await getAuthenticationToken();
-
-  return fetch(`${baseApiUrl}/gardens/${gardenId}/plants`, {
-    method: "POST",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${authToken}`,
+): Promise<APIResponse<Plant>> => {
+  const body = JSON.stringify({
+    plant: {
+      name,
+      check_frequency_scalar: checkFrequencyScalar,
+      check_frequency_unit: checkFrequencyUnit,
+      avatar,
     },
-    body: JSON.stringify({
-      plant: {
-        name,
-        check_frequency_scalar: checkFrequencyScalar,
-        check_frequency_unit: checkFrequencyUnit,
-        avatar,
-      },
-    }),
-  })
-    .then(
-      (response: Response): Promise<Plant | undefined> => {
-        if (response.ok) {
-          return response.json();
-        } else if (response.status == 401) {
-          AsyncStorage.removeItem("authentication_token");
-          return undefined;
-        } else {
-          throw Error(response.statusText);
-        }
-      },
-    )
-    .then((result: Plant | undefined): Plant | undefined => {
-      return result;
-    })
-    .catch((error: Error): void => console.error(error.message));
+  });
+
+  return authenticatedRequest<Plant>(
+    `${baseApiUrl}/gardens/${gardenId}/plants`,
+    "POST",
+    body,
+  );
 };
 
 const updatePlant = async (
@@ -65,96 +101,31 @@ const updatePlant = async (
   checkFrequencyUnit: string,
   checkFrequencyScalar: number,
   avatar: string | null,
-): Promise<Plant | void> => {
-  const authToken = await getAuthenticationToken();
-
-  return fetch(`${baseApiUrl}/plants/${plantId}`, {
-    method: "PUT",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${authToken}`,
+): Promise<APIResponse<Plant>> => {
+  const body = JSON.stringify({
+    plant: {
+      name,
+      check_frequency_scalar: checkFrequencyScalar,
+      check_frequency_unit: checkFrequencyUnit,
+      avatar,
     },
-    body: JSON.stringify({
-      plant: {
-        name,
-        check_frequency_scalar: checkFrequencyScalar,
-        check_frequency_unit: checkFrequencyUnit,
-        avatar,
-      },
-    }),
-  })
-    .then(
-      (response: Response): Promise<Plant | undefined> => {
-        if (response.ok) {
-          return response.json();
-        } else if (response.status == 401) {
-          AsyncStorage.removeItem("authentication_token");
-          return undefined;
-        } else {
-          throw Error(response.statusText);
-        }
-      },
-    )
-    .then((result: Plant | undefined): Plant | undefined => {
-      return result;
-    })
-    .catch((error: Error): void => console.error(error.message));
+  });
+
+  return authenticatedRequest<Plant>(
+    `${baseApiUrl}/plants/${plantId}`,
+    "PUT",
+    body,
+  );
 };
 
-const fetchPlant = async (plantId: number): Promise<Plant | void> => {
-  const authToken = await getAuthenticationToken();
-
-  return fetch(`${baseApiUrl}/plants/${plantId}`, {
-    method: "GET",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${authToken}`,
-    },
-  })
-    .then(
-      (response: Response): Promise<Plant | undefined> => {
-        if (response.ok) {
-          return response.json();
-        } else if (response.status == 401) {
-          AsyncStorage.removeItem("authentication_token");
-          return undefined;
-        } else {
-          throw Error(response.statusText);
-        }
-      },
-    )
-    .then((result: Plant | undefined): Plant | undefined => {
-      return result;
-    })
-    .catch((error: Error): void => console.error(error.message));
+const fetchPlant = async (plantId: number): Promise<APIResponse<Plant>> => {
+  return authenticatedRequest(`${baseApiUrl}/plants/${plantId}`, "GET");
 };
 
-const getGarden = async (gardenId: number = 1): Promise<Garden | void> => {
-  const authToken = await getAuthenticationToken();
-
-  return fetch(`${baseApiUrl}/gardens/${gardenId}`, {
-    method: "GET",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${authToken}`,
-    },
-  })
-    .then(
-      (response: Response): Promise<Garden | undefined> => {
-        if (response.ok) {
-          return response.json();
-        } else if (response.status == 401) {
-          AsyncStorage.removeItem("authentication_token");
-          return undefined;
-        } else {
-          throw Error(response.statusText);
-        }
-      },
-    )
-    .then((result: Garden | undefined): Garden | undefined => {
-      return result;
-    })
-    .catch((error: Error): void => console.error(error.message));
+const getGarden = async (
+  gardenId: number = 1,
+): Promise<APIResponse<Garden>> => {
+  return authenticatedRequest(`${baseApiUrl}/gardens/${gardenId}`, "GET");
 };
 
 const createCheckIn = async (
@@ -163,133 +134,61 @@ const createCheckIn = async (
   fertilized: boolean,
   notes: string,
   photos: string[] = [],
-): Promise<CheckIn | void> => {
-  const authToken = await getAuthenticationToken();
-
-  return fetch(`${baseApiUrl}/plants/${plantId}/check_ins`, {
-    method: "POST",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${authToken}`,
+): Promise<APIResponse<CheckIn>> => {
+  const body = JSON.stringify({
+    check_in: {
+      watered,
+      fertilized,
+      notes,
+      photos,
     },
-    body: JSON.stringify({
-      check_in: {
-        watered,
-        fertilized,
-        notes,
-        photos,
-      },
-    }),
-  })
-    .then(
-      (response: Response): Promise<CheckIn | undefined> => {
-        if (response.ok) {
-          return response.json();
-        } else if (response.status == 401) {
-          AsyncStorage.removeItem("authentication_token");
-          return undefined;
-        } else {
-          throw Error(response.statusText);
-        }
-      },
-    )
-    .then((result: CheckIn | undefined): CheckIn | undefined => {
-      return result;
-    })
-    .catch((error: Error): void => console.error(error.message));
+  });
+  return authenticatedRequest(
+    `${baseApiUrl}/plants/${plantId}/check_ins`,
+    "POST",
+    body,
+  );
 };
 
-const createGarden = async (name: string): Promise<Garden | void> => {
-  const authToken = await getAuthenticationToken();
-
-  return fetch(`${baseApiUrl}/gardens`, {
-    method: "POST",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${authToken}`,
+const createGarden = async (name: string): Promise<APIResponse<Garden>> => {
+  const body = JSON.stringify({
+    garden: {
+      name,
     },
-    body: JSON.stringify({
-      garden: {
-        name,
-      },
-    }),
-  })
-    .then(
-      (response: Response): Promise<Garden | undefined> => {
-        if (response.ok) {
-          return response.json();
-        } else if (response.status == 401) {
-          AsyncStorage.removeItem("authentication_token");
-          return undefined;
-        } else {
-          throw Error(response.statusText);
-        }
-      },
-    )
-    .then((result: Garden | undefined): Garden | undefined => {
-      return result;
-    })
-    .catch((error: Error): void => console.error(error.message));
+  });
+  return authenticatedRequest(`${baseApiUrl}/gardens`, "POST", body);
 };
 
 const uploadAvatar = async (
   plantId: number,
   photoData: string | null,
-): Promise<Plant> => {
-  const authToken = await getAuthenticationToken();
-
-  return fetch(`${baseApiUrl}/plants/${plantId}/avatar`, {
-    method: "POST",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${authToken}`,
-    },
-    body: JSON.stringify({
-      plant: { avatar: photoData },
-    }),
-  }).then((response: Response) => {
-    if (response.ok) {
-      return response.json();
-    } else if (response.status == 401) {
-      AsyncStorage.removeItem("authentication_token");
-      return undefined;
-    } else {
-      throw Error(response.statusText);
-    }
+): Promise<APIResponse<Plant>> => {
+  const body = JSON.stringify({
+    plant: { avatar: photoData },
   });
-};
 
-const signIn = async (email: string, password: string): Promise<User> => {
-  return fetch(`${baseApiUrl}/sessions`, {
-    method: "POST",
-    headers: defaultHeaders,
-    body: JSON.stringify({
-      user: {
-        email,
-        password,
-      },
-    }),
-  }).then(
-    (response: Response): Promise<User> => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw Error(response.statusText);
-      }
-    },
+  return authenticatedRequest(
+    `${baseApiUrl}/plants/${plantId}/avatar`,
+    "POST",
+    body,
   );
 };
 
-const signOut = async (): Promise<Response> => {
-  const authToken = await getAuthenticationToken();
-
-  return fetch(`${baseApiUrl}/sign_out`, {
-    method: "DELETE",
-    headers: {
-      ...defaultHeaders,
-      Authorization: `Bearer ${authToken}`,
+const signIn = async (
+  email: string,
+  password: string,
+): Promise<APIResponse<User>> => {
+  const body = JSON.stringify({
+    user: {
+      email,
+      password,
     },
   });
+  return baseRequest(`${baseApiUrl}/sessions`, defaultHeaders, "POST", body);
+};
+
+const signOut = async (): Promise<APIResponse<Response>> => {
+  return authenticatedRequest(`${baseApiUrl}/sign_out`, "DELETE");
 };
 
 const signUp = (
@@ -297,27 +196,16 @@ const signUp = (
   lastName: string,
   email: string,
   password: string,
-): Promise<User> => {
-  return fetch(`${baseApiUrl}/users`, {
-    method: "POST",
-    headers: defaultHeaders,
-    body: JSON.stringify({
-      user: {
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        password,
-      },
-    }),
-  }).then(
-    (response: Response): Promise<User> => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw Error(response.statusText);
-      }
+): Promise<APIResponse<User>> => {
+  const body = JSON.stringify({
+    user: {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      password,
     },
-  );
+  });
+  return baseRequest(`${baseApiUrl}/users`, defaultHeaders, "POST", body);
 };
 
 export {

@@ -54,14 +54,14 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
         setCurrentUser(user);
       }
       getGarden(currentGardenId || user.default_garden_id).then(
-        (gardenResponse: Garden | void): void => {
+        (gardenResponse): void => {
           if (
-            (!garden && gardenResponse) ||
+            (!garden && gardenResponse.data) ||
             (garden &&
-              gardenResponse &&
-              !_.isEqual(gardenResponse.plants, garden.plants))
+              gardenResponse.data &&
+              !_.isEqual(gardenResponse.data.plants, garden.plants))
           ) {
-            setGarden(gardenResponse);
+            setGarden(gardenResponse.data);
           }
         },
       );

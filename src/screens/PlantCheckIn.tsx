@@ -77,10 +77,11 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
             setIsSubmitting(true);
             createCheckIn(plantId, isWatered, isFertilized, notes, images).then(
               result => {
-                if (result) {
+                if (result.data) {
                   navigation.goBack();
                 } else {
-                  console.log("something went wrong");
+                  // TODO: Replace this display error to user
+                  console.log(result.error?.message);
                 }
               },
             );

@@ -9,7 +9,7 @@ import ImageWithIndicator from "../components/shared/ImageWithIndicator";
 import ActionButton from "../components/ActionButton/Button";
 import ActionButtonContainer from "../components/ActionButton/Container";
 import {Page} from "../components/Page";
-import Header from '../components/shared/Header';
+import Header from "../components/shared/Header";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -46,10 +46,10 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   useEffect(() => {
     let resolvePromise = true;
 
-    fetchPlant(plantId).then((response: Plant | void) => {
-      if (response && resolvePromise) {
+    fetchPlant(plantId).then((response) => {
+      if (response.data && resolvePromise) {
         setLoading(false);
-        setPlant(response);
+        setPlant(response.data);
       } else {
         navigation.goBack();
       }

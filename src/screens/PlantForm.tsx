@@ -56,7 +56,7 @@ const pluralize = (string: string, count: number): string => {
   }
 };
 
-const submitForm = (
+const submitForm = async (
   plantId: number | undefined,
   gardenId: number,
   name: string,
@@ -64,10 +64,10 @@ const submitForm = (
   checkFrequencyScalar: number,
   image: string | null,
   navigation: NavigationStackProp,
-): void => {
+): Promise<void> => {
   let requestResult;
   if (plantId) {
-    requestResult = updatePlant(
+    requestResult = await updatePlant(
       plantId,
       name,
       checkFrequencyUnit,
@@ -75,7 +75,7 @@ const submitForm = (
       image,
     );
   } else {
-    requestResult = createPlant(
+    requestResult = await createPlant(
       gardenId,
       name,
       checkFrequencyUnit,
@@ -84,7 +84,7 @@ const submitForm = (
     );
   }
 
-  if (requestResult) {
+  if (requestResult.data) {
     navigation.navigate("PlantList");
   }
 };

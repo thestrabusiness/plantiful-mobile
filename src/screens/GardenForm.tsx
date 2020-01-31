@@ -46,9 +46,12 @@ const GardenForm: FunctionComponent<NavigationProps> = ({ navigation }) => {
         title="Submit"
         onPress={(): void => {
           createGarden(name).then(result => {
-            if (result) {
-              afterCreate(result.id);
+            if (result.data) {
+              afterCreate(result.data.id);
               navigation.goBack();
+            } else {
+              // TODO: Display some useful message to user
+              console.log(result.error?.message);
             }
           });
         }}

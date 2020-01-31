@@ -112,8 +112,8 @@ const SignUp = (props: Props): ReactElement => {
         title="Sign Up"
         onPress={(): void => {
           onSignUp(firstName, lastName, email, password).then(
-            (wasSignedUp: boolean) => {
-              if (wasSignedUp) {
+            (successfulSignUp: boolean) => {
+              if (successfulSignUp) {
                 navigation.navigate("SignedIn");
               } else {
                 setBadSignUp(true);

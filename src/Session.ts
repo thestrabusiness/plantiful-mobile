@@ -19,16 +19,16 @@ const getAuthenticationToken = (): Promise<string> => {
   });
 };
 
-const onSignIn = (email: string, password: string): Promise<boolean> => {
-  return signIn(email, password)
-    .then((user: User): boolean => {
-      AsyncStorage.setItem(AUTH_TOKEN_KEY, user.mobile_api_token);
-      AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
+const onSignIn = async (email: string, password: string): Promise<boolean> => {
+  return signIn(email, password).then((response): boolean => {
+    if (response.data) {
+      AsyncStorage.setItem(AUTH_TOKEN_KEY, response.data.mobile_api_token);
+      AsyncStorage.setItem(USER_KEY, JSON.stringify(response.data));
       return true;
-    })
-    .catch((): boolean => {
+    } else {
       return false;
-    });
+    }
+  });
 };
 
 const onSignOut = async (): Promise<void> => {
@@ -36,21 +36,23 @@ const onSignOut = async (): Promise<void> => {
   AsyncStorage.removeItem(AUTH_TOKEN_KEY);
 };
 
-const onSignUp = (
+const onSignUp = async (
   firstName: string,
   lastName: string,
   email: string,
   password: string,
 ): Promise<boolean> => {
-  return signUp(firstName, lastName, email, password)
-    .then((user: User): boolean => {
-      AsyncStorage.setItem(AUTH_TOKEN_KEY, user.mobile_api_token);
-      AsyncStorage.setItem(USER_KEY, JSON.stringify(user));
-      return true;
-    })
-    .catch((): boolean => {
-      return false;
-    });
+  return signUp(firstName, lastName, email, password).then(
+    (response): boolean => {
+      if (response.data) {
+        AsyncStorage.setItem(AUTH_TOKEN_KEY, response.data.mobile_api_token);
+        AsyncStorage.setItem(USER_KEY, JSON.stringify(response.data));
+        return true;
+      } else {
+        return false;
+      }
+    },
+  );
 };
 
 const checkIfSignedIn = (): Promise<void> => {
