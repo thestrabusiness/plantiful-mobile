@@ -2,29 +2,19 @@ import React, { FunctionComponent } from "react";
 import { StyleSheet, View, TouchableOpacity, ViewStyle } from "react-native";
 import Icon from "react-native-vector-icons/Octicons";
 
-const elevationShadowStyle = (elevation: number): ViewStyle => {
-  return {
-    elevation,
-    shadowColor: "black",
-    shadowOffset: { width: 3, height: 0.75 * elevation },
-    shadowOpacity: 0.6,
-    shadowRadius: 0.8 * elevation,
-  };
-};
+import { Outline, Shadow } from "../../styles";
 
 const styles = StyleSheet.create({
   actionButton: {
     alignItems: "center",
     backgroundColor: "green",
-    borderRadius: 100,
+    borderRadius: Outline.borderRadiusCircle,
     height: 60,
     justifyContent: "center",
     width: 60,
     marginVertical: 5,
     padding: 5,
-  },
-  shadow: {
-    ...elevationShadowStyle(5),
+    ...Shadow.dropShadowActionButton,
   },
 });
 
@@ -43,7 +33,7 @@ const ActionButton: FunctionComponent<ActionButtonProps> = ({
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.actionButton, styles.shadow, style]}
+      style={[styles.actionButton, style]}
       onPress={onPress}
       activeOpacity={0.9}
     >

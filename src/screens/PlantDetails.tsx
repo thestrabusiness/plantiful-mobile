@@ -20,7 +20,7 @@ import Header from "../components/shared/Header";
 import LoadingMessage from "../components/Plant/LoadingMessage";
 import useDidFocus from "../useDidFocus";
 
-import { Layout, Spacing, Outline } from "../styles";
+import { Layout, Spacing, Outline, Shadow } from "../styles";
 
 const styles = StyleSheet.create({
   checkInHeader: {
@@ -42,6 +42,11 @@ const styles = StyleSheet.create({
   },
   plantName: {
     fontSize: 24,
+  },
+  imageContainer: {
+    backgroundColor: "white",
+    borderRadius: Outline.borderRadiusAvatar,
+    ...Shadow.dropShadowSharp,
   },
 });
 
@@ -138,10 +143,12 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
                 });
               }}
             >
-              <ImageWithIndicator
-                source={avatarPhotoData || plant.avatar}
-                imageStyle={styles.plantImage}
-              />
+              <View style={styles.imageContainer}>
+                <ImageWithIndicator
+                  source={avatarPhotoData || plant.avatar}
+                  imageStyle={styles.plantImage}
+                />
+              </View>
             </TouchableOpacity>
             <Text style={styles.checkInHeader}>
               Next check-in due: {plant.next_check_date}

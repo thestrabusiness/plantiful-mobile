@@ -4,21 +4,23 @@ import { Text, View, StyleSheet } from "react-native";
 import { CheckIn } from "../../api/Types";
 import ImageStrip from "../shared/ImageStrip";
 
+import { Outline, Spacing, Shadow } from "../../styles";
+
 interface Props {
   checkIn: CheckIn;
 }
 
 const styles = StyleSheet.create({
   checkInRow: {
-    borderStyle: "solid",
-    borderColor: "black",
-    borderWidth: 0.5,
-    borderRadius: 10,
+    backgroundColor: "white",
+    borderRadius: Outline.borderRadiusMedium,
     padding: 10,
     marginBottom: 10,
+    ...Outline.base,
+    ...Shadow.dropShadowSharp,
   },
   checkInRowItem: {
-    marginVertical: 3,
+    marginVertical: Spacing.smallest,
   },
 });
 

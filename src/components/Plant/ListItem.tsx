@@ -5,7 +5,7 @@ import { NavigationProps } from "../Router";
 import { Plant } from "../../api/Types";
 import ImageWithIndicator from "../shared/ImageWithIndicator";
 
-import { Layout, Outline } from "../../styles";
+import { Layout, Outline, Shadow } from "../../styles";
 
 interface Props extends NavigationProps {
   plant: Plant;
@@ -27,6 +27,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: gridItemDimension,
   },
+  imageContainer: {
+    backgroundColor: "white",
+    borderRadius: Outline.borderRadiusAvatar,
+    ...Shadow.dropShadowMinimalVertical,
+  },
 });
 
 const PlantListItem: FunctionComponent<Props> = ({ plant, navigation }) => {
@@ -37,10 +42,12 @@ const PlantListItem: FunctionComponent<Props> = ({ plant, navigation }) => {
       }}
     >
       <View style={styles.plantItem}>
-        <ImageWithIndicator
-          source={plant.avatar}
-          imageStyle={styles.plantItemImage}
-        />
+        <View style={styles.imageContainer}>
+          <ImageWithIndicator
+            source={plant.avatar}
+            imageStyle={styles.plantItemImage}
+          />
+        </View>
         <Text style={styles.plantName} numberOfLines={1} ellipsizeMode="tail">
           {plant.name}
         </Text>
