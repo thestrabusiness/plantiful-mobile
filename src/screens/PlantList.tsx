@@ -1,4 +1,9 @@
-import React, { ReactElement, useState, FunctionComponent } from "react";
+import React, {
+  ReactElement,
+  useState,
+  FunctionComponent,
+  useEffect,
+} from "react";
 import {
   StyleSheet,
   View,
@@ -7,11 +12,10 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import _ from "lodash";
 import Icon from "react-native-vector-icons/Octicons";
 import Toast from "react-native-simple-toast";
 
-import { APIResponse, handleError, getGarden } from "../api/Api";
+import { handleError, getGarden } from "../api/Api";
 import { User, Garden } from "../api/Types";
 import { Page } from "../components/Page";
 import { NavigationProps } from "../components/Router";
@@ -22,6 +26,7 @@ import ActionButton from "../components/ActionButton/Button";
 import ActionButtonContainer from "../components/ActionButton/Container";
 import Header from "../components/shared/Header";
 import ViewWithDrawer from "../components/Plant/ListDrawer";
+import useDidFocus from "../useDidFocus";
 
 const windowWidth = Dimensions.get("window").width;
 const drawerWidth = 300;
@@ -49,46 +54,44 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [currentGardenId, setCurrentGardenId] = useState();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const firstGardenLoad = (response: APIResponse<Garden>): boolean => {
-    return !garden && !!response.data;
-  };
-
-  const updatedGardenFetched = (response: APIResponse<Garden>): boolean => {
-    return !!garden && !_.isEqual(response?.data?.plants, garden.plants);
-  };
-
-  retrieveCurrentUser().then((user: User | void): void => {
-    if (user) {
-      if (!currentUser) {
-        setCurrentUser(user);
+  const fetchCurrentGarden = (currentGardenId: number): void => {
+    getGarden(currentGardenId).then((response): void => {
+      if (response.data) {
+        setGarden(response.data);
+      } else if (response.error) {
+        handleError(response);
       }
-      getGarden(currentGardenId || user.default_garden_id).then(
-        (response): void => {
-          if (
-            response.data &&
-            (firstGardenLoad(response) || updatedGardenFetched(response))
-          ) {
-            setGarden(response.data);
-          } else if (response.error) {
-            handleError(response);
-          }
-        },
-      );
-    } else {
-      onSignOut().then((): void => {
-        Toast.show("You aren't signed in");
-        navigation.navigate("SignedOut");
-      });
-    }
+    });
+  };
+
+  const fetchCurentUserAndGarden = (): void => {
+    retrieveCurrentUser().then((user: User | void): void => {
+      if (user) {
+        setCurrentUser(user);
+        fetchCurrentGarden(currentGardenId || user.default_garden_id);
+      } else {
+        onSignOut().then((): void => {
+          Toast.show("You aren't signed in");
+          navigation.navigate("SignedOut");
+        });
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchCurentUserAndGarden();
+  }, [currentGardenId]);
+
+  useDidFocus(navigation, () => {
+    fetchCurentUserAndGarden();
   });
 
   const AddPlantsButton = (): ReactElement => {
     return (
       <ActionButtonContainer>
         <ActionButton
-          style={{ marginBottom: 40 }}
           iconName="plus-small"
-          iconSize={70}
+          iconSize={50}
           onPress={(): void => {
             navigation.navigate("PlantForm", {
               gardenId: garden && garden.id.toString(),

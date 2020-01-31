@@ -90,7 +90,7 @@ const submitForm = async (
 
   if (requestResult.data) {
     Toast.show(successMessage);
-    navigation.navigate("PlantList");
+    navigation.goBack();
   } else {
     handleError(requestResult);
   }

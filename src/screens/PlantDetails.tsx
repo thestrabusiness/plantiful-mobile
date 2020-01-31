@@ -11,7 +11,7 @@ import Toast from "react-native-simple-toast";
 
 import CheckInList from "../components/CheckIn/List";
 import { NavigationProps } from "../components/Router";
-import { fetchPlant, handleError, uploadAvatar } from "../api/Api";
+import { deletePlant, fetchPlant, handleError, uploadAvatar } from "../api/Api";
 import { Plant } from "../api/Types";
 import ImageWithIndicator from "../components/shared/ImageWithIndicator";
 import ActionButton from "../components/ActionButton/Button";
@@ -19,6 +19,7 @@ import ActionButtonContainer from "../components/ActionButton/Container";
 import { Page } from "../components/Page";
 import Header from "../components/shared/Header";
 import LoadingMessage from "../components/Plant/LoadingMessage";
+import useDidFocus from "../useDidFocus";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -52,9 +53,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const plantId = navigation.getParam("id", null);
   const plantName = plant?.name;
 
-  useEffect(() => {
-    let resolvePromise = true;
-
+  const getPlantData = (resolvePromise: boolean): void => {
     fetchPlant(plantId).then(response => {
       if (response.data && resolvePromise) {
         setLoading(false);
@@ -64,6 +63,12 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
         navigation.goBack();
       }
     });
+  };
+
+  useEffect(() => {
+    let resolvePromise = true;
+    getPlantData(resolvePromise);
+
     return (): void => {
       resolvePromise = false;
     };
@@ -81,6 +86,10 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
     }
   }, [avatarPhotoData]);
 
+  useDidFocus(navigation, () => {
+    getPlantData(true);
+  });
+
   if (loading) {
     return <LoadingMessage />;
   }
@@ -92,7 +101,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
         <ActionButtonContainer>
           <ActionButton
             iconName="pencil"
-            iconSize={40}
+            iconSize={30}
             onPress={(): void => {
               navigation.navigate("PlantForm", {
                 plant: JSON.stringify(plant),
@@ -101,9 +110,23 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
           />
           <ActionButton
             iconName="check"
-            iconSize={60}
+            iconSize={35}
             onPress={(): void => {
               navigation.navigate("PlantCheckIn", { plantId, plantName });
+            }}
+          />
+          <ActionButton
+            iconName="trashcan"
+            iconSize={35}
+            onPress={(): void => {
+              deletePlant(plantId).then(response => {
+                if (!response.error?.message) {
+                  Toast.show(`${plantName} deleted`);
+                  navigation.goBack();
+                } else {
+                  handleError(response);
+                }
+              });
             }}
           />
         </ActionButtonContainer>

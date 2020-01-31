@@ -35,7 +35,16 @@ const handleError = (response: APIResponse<any>): void => {
   Toast.show(error);
 };
 
-const baseRequest = async <T>(
+const jsonOrNull = (response: Response): Promise<any> => {
+  const contentType = response.headers.get("content-type");
+  if (contentType && contentType.indexOf("application/json") !== -1) {
+    return response.json();
+  } else {
+    return Promise.resolve({});
+  }
+};
+
+const apiRequest = async <T>(
   url: string,
   headers: any,
   method: string,
@@ -44,7 +53,7 @@ const baseRequest = async <T>(
   return fetch(url, { method, headers, body })
     .then((response: Response): Promise<any> | APIResponse<any> => {
       if (response.ok) {
-        return response.json();
+        return jsonOrNull(response);
       } else if (response.status == 401) {
         AsyncStorage.removeItem("authentication_token");
         throw new Error("You aren't signed in");
@@ -83,7 +92,7 @@ const authenticatedRequest = async <T>(
     Authorization: `Bearer ${authToken}`,
   };
 
-  return baseRequest(url, headers, method, body);
+  return apiRequest(url, headers, method, body);
 };
 
 const createPlant = async (
@@ -134,6 +143,10 @@ const updatePlant = async (
 
 const fetchPlant = async (plantId: number): Promise<APIResponse<Plant>> => {
   return authenticatedRequest(`${baseApiUrl}/plants/${plantId}`, "GET");
+};
+
+const deletePlant = async (plantId: number): Promise<APIResponse<Plant>> => {
+  return authenticatedRequest(`${baseApiUrl}/plants/${plantId}`, "DELETE");
 };
 
 const getGarden = async (
@@ -198,7 +211,7 @@ const signIn = async (
       password,
     },
   });
-  return baseRequest(`${baseApiUrl}/sessions`, defaultHeaders, "POST", body);
+  return apiRequest(`${baseApiUrl}/sessions`, defaultHeaders, "POST", body);
 };
 
 const signOut = async (): Promise<APIResponse<Response>> => {
@@ -219,7 +232,7 @@ const signUp = (
       password,
     },
   });
-  return baseRequest(`${baseApiUrl}/users`, defaultHeaders, "POST", body);
+  return apiRequest(`${baseApiUrl}/users`, defaultHeaders, "POST", body);
 };
 
 export {
@@ -227,6 +240,7 @@ export {
   createCheckIn,
   createPlant,
   createGarden,
+  deletePlant,
   fetchPlant,
   getGarden,
   handleError,

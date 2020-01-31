@@ -17,16 +17,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "green",
     borderRadius: 100,
-    height: 70,
+    height: 60,
     justifyContent: "center",
-    width: 70,
+    width: 60,
     marginVertical: 5,
+    padding: 5,
   },
   shadow: {
     ...elevationShadowStyle(5),
-  },
-  plus: {
-    top: 1,
   },
 });
 
@@ -50,7 +48,7 @@ const ActionButton: FunctionComponent<ActionButtonProps> = ({
       activeOpacity={0.9}
     >
       <View>
-        <Icon name={iconName} size={iconSize} style={styles.plus} />
+        <Icon name={iconName} size={iconSize} />
       </View>
     </TouchableOpacity>
   );

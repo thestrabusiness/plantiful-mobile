@@ -37,8 +37,8 @@ const DrawerSection: FunctionComponent<MenuSectionProps> = ({
       <TouchableOpacity
         key={garden.id}
         onPress={(): void => {
-          setMenuOpen(false);
           setCurrentGardenId(garden.id);
+          setMenuOpen(false);
         }}
       >
         <Text style={styles.menuItem}>{garden.name}</Text>
