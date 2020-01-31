@@ -20,11 +20,11 @@ import Header from "../components/shared/Header";
 import LoadingMessage from "../components/Plant/LoadingMessage";
 import useDidFocus from "../useDidFocus";
 
-import { Layout } from "../styles";
+import { Layout, Spacing } from "../styles";
 
 const styles = StyleSheet.create({
   pageContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: Spacing.base,
   },
   detailsContainer: {
     alignItems: "center",
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   checkInHeader: {
     fontSize: 18,
-    marginVertical: 10,
+    marginVertical: Spacing.base,
   },
 });
 

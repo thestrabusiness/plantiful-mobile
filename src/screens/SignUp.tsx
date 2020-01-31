@@ -7,7 +7,7 @@ import Toast from "react-native-simple-toast";
 import { Page } from "../components/Page";
 import { onSignUp } from "../Session";
 
-import { Layout } from "../styles";
+import { Layout, Inputs, Spacing } from "../styles";
 
 interface Props {
   navigation: NavigationStackProp;
@@ -15,22 +15,14 @@ interface Props {
 
 const styles = StyleSheet.create({
   container: {
-    height: Layout.screenHeight,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 10,
+    ...Layout.centeredContent,
   },
   inputField: {
-    height: 40,
-    borderColor: "black",
-    borderWidth: 1,
-    marginBottom: 10,
-    width: "100%",
-    textAlign: "center",
+    ...Inputs.singleLine,
   },
   signInError: {
     color: "red",
-    marginBottom: 10,
+    marginBottom: Spacing.base,
   },
 });
 

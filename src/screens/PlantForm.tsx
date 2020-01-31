@@ -16,19 +16,14 @@ import Header from "../components/shared/Header";
 import { createPlant, handleError, updatePlant } from "../api/Api";
 import { Plant } from "../api/Types";
 
-import { Layout } from "../styles";
+import { Layout, Inputs, Spacing } from "../styles";
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
+    ...Layout.paddingHorizontal,
   },
   inputField: {
-    height: 40,
-    borderColor: "black",
-    borderWidth: 1,
-    marginBottom: 10,
-    width: "100%",
-    textAlign: "center",
+    ...Inputs.singleLine,
   },
   checkFrequencyRow: {
     flexDirection: "row",
@@ -39,7 +34,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   formSpacing: {
-    marginTop: 30,
+    marginTop: Spacing.large,
   },
   plantImage: {
     alignSelf: "center",

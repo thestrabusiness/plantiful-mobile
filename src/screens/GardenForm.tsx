@@ -6,18 +6,15 @@ import { Page } from "../components/Page";
 import Header from "../components/shared/Header";
 import { createGarden, handleError } from "../api/Api";
 
+import { Inputs, Layout } from "../styles";
+
 const styles = StyleSheet.create({
   container: {
+    ...Layout.paddingHorizontal,
     justifyContent: "space-between",
-    paddingHorizontal: 10,
   },
   inputField: {
-    height: 40,
-    borderColor: "black",
-    borderWidth: 1,
-    marginBottom: 10,
-    width: "100%",
-    textAlign: "center",
+    ...Inputs.singleLine,
   },
 });
 

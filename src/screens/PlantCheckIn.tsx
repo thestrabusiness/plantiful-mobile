@@ -9,23 +9,20 @@ import ImageAttachmentStrip from "../components/shared/ImageAttachmentStrip";
 import Header from "../components/shared/Header";
 import { Page } from "../components/Page";
 
+import { Inputs, Layout, Spacing } from "../styles";
+
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 10,
+    ...Layout.paddingHorizontal,
   },
   inputSection: {
-    paddingTop: 10,
+    alignContent: "space-between",
     height: "80%",
     justifyContent: "space-between",
-    alignContent: "space-between",
+    paddingTop: Spacing.base,
   },
   inputField: {
-    height: 120,
-    borderColor: "black",
-    borderWidth: 1,
-    marginBottom: 10,
-    width: "100%",
-    textAlign: "center",
+    ...Inputs.multiLine,
   },
 });
 
@@ -64,6 +61,7 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
           <View>
             <Text>Notes</Text>
             <TextInput
+              multiline={true}
               style={styles.inputField}
               value={notes}
               onChangeText={(newNotes): void => {
