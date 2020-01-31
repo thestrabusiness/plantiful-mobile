@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import _ from "lodash";
 import Icon from "react-native-vector-icons/Octicons";
+import Toast from "react-native-simple-toast";
 
-import { getGarden } from "../api/Api";
+import { APIResponse, handleError, getGarden } from "../api/Api";
 import { User, Garden } from "../api/Types";
 import { Page } from "../components/Page";
 import { NavigationProps } from "../components/Router";
@@ -48,25 +49,36 @@ const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [currentGardenId, setCurrentGardenId] = useState();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const firstGardenLoad = (response: APIResponse<Garden>): boolean => {
+    return !garden && !!response.data;
+  };
+
+  const updatedGardenFetched = (response: APIResponse<Garden>): boolean => {
+    return !!garden && !_.isEqual(response?.data?.plants, garden.plants);
+  };
+
   retrieveCurrentUser().then((user: User | void): void => {
     if (user) {
       if (!currentUser) {
         setCurrentUser(user);
       }
       getGarden(currentGardenId || user.default_garden_id).then(
-        (gardenResponse): void => {
+        (response): void => {
           if (
-            (!garden && gardenResponse.data) ||
-            (garden &&
-              gardenResponse.data &&
-              !_.isEqual(gardenResponse.data.plants, garden.plants))
+            response.data &&
+            (firstGardenLoad(response) || updatedGardenFetched(response))
           ) {
-            setGarden(gardenResponse.data);
+            setGarden(response.data);
+          } else if (response.error) {
+            handleError(response);
           }
         },
       );
     } else {
-      onSignOut().then((): boolean => navigation.navigate("SignedOut"));
+      onSignOut().then((): void => {
+        Toast.show("You aren't signed in");
+        navigation.navigate("SignedOut");
+      });
     }
   });
 

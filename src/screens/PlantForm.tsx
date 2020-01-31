@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import NumericInput from "react-native-numeric-input";
 import { NavigationStackProp } from "react-navigation-stack";
+import Toast from "react-native-simple-toast";
 
 import { Page } from "../components/Page";
 import Header from "../components/shared/Header";
-import { createPlant, updatePlant } from "../api/Api";
+import { createPlant, handleError, updatePlant } from "../api/Api";
 import { Plant } from "../api/Types";
 
 const windowWidth = Dimensions.get("window").width;
@@ -65,7 +66,8 @@ const submitForm = async (
   image: string | null,
   navigation: NavigationStackProp,
 ): Promise<void> => {
-  let requestResult;
+  let requestResult, successMessage;
+
   if (plantId) {
     requestResult = await updatePlant(
       plantId,
@@ -74,6 +76,7 @@ const submitForm = async (
       checkFrequencyScalar,
       image,
     );
+    successMessage = `${name} updated!`;
   } else {
     requestResult = await createPlant(
       gardenId,
@@ -82,10 +85,14 @@ const submitForm = async (
       checkFrequencyScalar,
       image,
     );
+    successMessage = `${name} created`;
   }
 
   if (requestResult.data) {
+    Toast.show(successMessage);
     navigation.navigate("PlantList");
+  } else {
+    handleError(requestResult);
   }
 };
 
@@ -116,18 +123,25 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
   };
 
   const imageAvailable = !!image || !!plant.avatar;
-  const buttonText = imageAvailable ? "Change photo" : "Add a photo";
+  const photoButtonText = imageAvailable ? "Change photo" : "Add a photo";
   const pageTitle = !!plant.id ? `Edit ${plant.name}` : "Add a plant!";
 
-  return (
-    <Page style={styles.container}>
-      <Header title={pageTitle} navigation={navigation} />
-      {imageAvailable && (
+  const Avatar = (): ReactElement => {
+    if (imageAvailable) {
+      return (
         <Image
           source={{ uri: image || plant.avatar }}
           style={styles.plantImage}
         />
-      )}
+      );
+    }
+    return <></>;
+  };
+
+  return (
+    <Page style={styles.container}>
+      <Header title={pageTitle} navigation={navigation} />
+      <Avatar />
       <TextInput
         style={[styles.inputField, styles.formSpacing]}
         placeholder={"Name"}
@@ -156,7 +170,7 @@ const PlantForm: FunctionComponent<PlantFormProps> = ({
           <Picker.Item label={weekLabel} value="week" />
         </Picker>
       </View>
-      <Button title={buttonText} onPress={navigateToCameraScreen} />
+      <Button title={photoButtonText} onPress={navigateToCameraScreen} />
       <Button
         title="Submit"
         onPress={(): void => {

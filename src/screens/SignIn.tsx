@@ -95,7 +95,7 @@ const SignIn = (props: Props): ReactElement => {
         }}
       />
       <View style={styles.section}>
-        <Text> Don't have an account yet? </Text>
+        <Text> Don&apos;t have an account yet? </Text>
         <Button
           title="Sign Up"
           onPress={(): void => {

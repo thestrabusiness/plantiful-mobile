@@ -1,15 +1,24 @@
 import React, { FunctionComponent, useState, useEffect } from "react";
-import {Dimensions, Text, TouchableOpacity, View, StyleSheet, ScrollView} from "react-native";
+import {
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
+import Toast from "react-native-simple-toast";
 
 import CheckInList from "../components/CheckIn/List";
 import { NavigationProps } from "../components/Router";
-import { fetchPlant, uploadAvatar } from "../api/Api";
+import { fetchPlant, handleError, uploadAvatar } from "../api/Api";
 import { Plant } from "../api/Types";
 import ImageWithIndicator from "../components/shared/ImageWithIndicator";
 import ActionButton from "../components/ActionButton/Button";
 import ActionButtonContainer from "../components/ActionButton/Container";
-import {Page} from "../components/Page";
+import { Page } from "../components/Page";
 import Header from "../components/shared/Header";
+import LoadingMessage from "../components/Plant/LoadingMessage";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -46,11 +55,12 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   useEffect(() => {
     let resolvePromise = true;
 
-    fetchPlant(plantId).then((response) => {
+    fetchPlant(plantId).then(response => {
       if (response.data && resolvePromise) {
         setLoading(false);
         setPlant(response.data);
       } else {
+        handleError(response);
         navigation.goBack();
       }
     });
@@ -61,12 +71,18 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
 
   useEffect(() => {
     if (avatarPhotoData !== null) {
-      uploadAvatar(plantId, avatarPhotoData);
+      uploadAvatar(plantId, avatarPhotoData).then(response => {
+        if (response.data) {
+          Toast.show("Photo updated!");
+        } else {
+          handleError(response);
+        }
+      });
     }
   }, [avatarPhotoData]);
 
   if (loading) {
-    return <Text>Loading...</Text>;
+    return <LoadingMessage />;
   }
 
   if (plant) {
@@ -78,25 +94,28 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
             iconName="pencil"
             iconSize={40}
             onPress={(): void => {
-              navigation.navigate("PlantForm", {plant: JSON.stringify(plant)});
+              navigation.navigate("PlantForm", {
+                plant: JSON.stringify(plant),
+              });
             }}
           />
           <ActionButton
             iconName="check"
             iconSize={60}
             onPress={(): void => {
-              navigation.navigate("PlantCheckIn", {plantId, plantName});
+              navigation.navigate("PlantCheckIn", { plantId, plantName });
             }}
           />
         </ActionButtonContainer>
         <ScrollView style={styles.pageContainer}>
           <View style={styles.detailsContainer}>
-            <TouchableOpacity onPress={(): void => {
-              navigation.navigate(
-                "Camera",
-                {onPictureTaken: setAvatarPhotoData},
-              );
-            }}>
+            <TouchableOpacity
+              onPress={(): void => {
+                navigation.navigate("Camera", {
+                  onPictureTaken: setAvatarPhotoData,
+                });
+              }}
+            >
               <ImageWithIndicator
                 source={avatarPhotoData || plant.avatar}
                 imageStyle={styles.plantImage}

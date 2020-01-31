@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-community/async-storage";
 import { signIn, signOut, signUp } from "./api/Api";
-import { User } from "./api/Types";
 
 const AUTH_TOKEN_KEY = "authentication_token";
 const USER_KEY = "current_user";
@@ -55,7 +54,7 @@ const onSignUp = async (
   );
 };
 
-const checkIfSignedIn = (): Promise<void> => {
+const checkIfSignedIn = (): Promise<boolean> => {
   return new Promise((resolve, reject): void => {
     AsyncStorage.getItem(AUTH_TOKEN_KEY)
       .then((res: string | null): void => {

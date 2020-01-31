@@ -4,7 +4,7 @@ import { View, TextInput, StyleSheet, Button } from "react-native";
 import { NavigationProps } from "../components/Router";
 import { Page } from "../components/Page";
 import Header from "../components/shared/Header";
-import { createGarden } from "../api/Api";
+import { createGarden, handleError } from "../api/Api";
 
 const styles = StyleSheet.create({
   container: {
@@ -45,13 +45,12 @@ const GardenForm: FunctionComponent<NavigationProps> = ({ navigation }) => {
       <Button
         title="Submit"
         onPress={(): void => {
-          createGarden(name).then(result => {
-            if (result.data) {
-              afterCreate(result.data.id);
+          createGarden(name).then(response => {
+            if (response.data) {
+              afterCreate(response.data.id);
               navigation.goBack();
             } else {
-              // TODO: Display some useful message to user
-              console.log(result.error?.message);
+              handleError(response);
             }
           });
         }}

@@ -1,9 +1,4 @@
-import React, {
-  createContext,
-  FunctionComponent,
-  useEffect,
-  useState,
-} from "react";
+import React, { createContext, FunctionComponent, useState } from "react";
 
 import ImageView from "react-native-image-viewing";
 
@@ -22,11 +17,17 @@ interface ImageViewContextValues {
 
 const defaultContext: ImageViewContextValues = {
   imageViewVisible: false,
-  setImageViewVisible: (_visible: boolean): void => {},
+  setImageViewVisible: (_visible: boolean): void => {
+    _visible;
+  },
   imageViewIndex: 0,
-  setImageViewIndex: (_index: number): void => {},
+  setImageViewIndex: (_index: number): void => {
+    _index;
+  },
   imagesForImageView: [],
-  setImagesForImageView: (_images: ImageViewImage[]): void => {},
+  setImagesForImageView: (_images: ImageViewImage[]): void => {
+    _images;
+  },
 };
 
 const ImageViewContext = createContext<ImageViewContextValues>(defaultContext);

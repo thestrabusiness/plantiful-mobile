@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { ReactElement } from "react";
-import { StyleSheet, Button, Dimensions } from "react-native";
+import { StyleSheet, Button, Dimensions, TextInput } from "react-native";
+import { NavigationStackProp } from "react-navigation-stack";
+import Toast from "react-native-simple-toast";
+
 import { Page } from "../components/Page";
 import { onSignUp } from "../Session";
-import { NavigationStackProp } from "react-navigation-stack";
-import { TextInput } from "react-native-gesture-handler";
 
 interface Props {
   navigation: NavigationStackProp;
@@ -114,6 +115,7 @@ const SignUp = (props: Props): ReactElement => {
           onSignUp(firstName, lastName, email, password).then(
             (successfulSignUp: boolean) => {
               if (successfulSignUp) {
+                Toast.show("Welcome to Plantiful");
                 navigation.navigate("SignedIn");
               } else {
                 setBadSignUp(true);

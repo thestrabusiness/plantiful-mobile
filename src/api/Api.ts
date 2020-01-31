@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
+import Toast from "react-native-simple-toast";
 
 import { getAuthenticationToken } from "../Session";
 import { Garden, User, Plant, CheckIn } from "./Types";
@@ -26,6 +27,14 @@ interface APIResponse<T> {
   error: APIError | null;
 }
 
+const defaultErrorMessage =
+  "Something went wrong. Try again later or contact support";
+
+const handleError = (response: APIResponse<any>): void => {
+  const error = response.error?.message || defaultErrorMessage;
+  Toast.show(error);
+};
+
 const baseRequest = async <T>(
   url: string,
   headers: any,
@@ -33,7 +42,7 @@ const baseRequest = async <T>(
   body: any = null,
 ): Promise<APIResponse<T>> => {
   return fetch(url, { method, headers, body })
-    .then((response: Response): Promise<any> | undefined => {
+    .then((response: Response): Promise<any> | APIResponse<any> => {
       if (response.ok) {
         return response.json();
       } else if (response.status == 401) {
@@ -41,7 +50,10 @@ const baseRequest = async <T>(
         throw new Error("You aren't signed in");
       }
 
-      return undefined;
+      return {
+        data: null,
+        error: { message: defaultErrorMessage },
+      };
     })
     .then((result: T) => {
       if (result) {
@@ -49,12 +61,14 @@ const baseRequest = async <T>(
       } else {
         return {
           data: null,
-          error: { message: "Something went wrong" },
+          error: { message: defaultErrorMessage },
         };
       }
     })
     .catch(error => {
-      return { data: null, error };
+      const response = { data: null, error };
+      handleError(response);
+      return response;
     });
 };
 
@@ -209,11 +223,13 @@ const signUp = (
 };
 
 export {
+  APIResponse,
   createCheckIn,
   createPlant,
   createGarden,
   fetchPlant,
   getGarden,
+  handleError,
   signIn,
   signOut,
   signUp,

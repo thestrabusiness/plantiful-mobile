@@ -1,7 +1,8 @@
 import React, { FunctionComponent, useState } from "react";
 import { Button, TextInput, Text, View, StyleSheet } from "react-native";
+import Toast from "react-native-simple-toast";
 
-import { createCheckIn } from "../api/Api";
+import { createCheckIn, handleError } from "../api/Api";
 import SwitchInputField from "../components/shared/SwitchInputField";
 import { NavigationProps } from "../components/Router";
 import ImageAttachmentStrip from "../components/shared/ImageAttachmentStrip";
@@ -39,6 +40,7 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
 
   if (!plantId) {
     navigation.goBack();
+    Toast.show("Couldn't find that plant");
     return <></>;
   } else {
     return (
@@ -78,10 +80,10 @@ const PlantCheckIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
             createCheckIn(plantId, isWatered, isFertilized, notes, images).then(
               result => {
                 if (result.data) {
+                  Toast.show("Check-in added!");
                   navigation.goBack();
                 } else {
-                  // TODO: Replace this display error to user
-                  console.log(result.error?.message);
+                  handleError(result);
                 }
               },
             );
