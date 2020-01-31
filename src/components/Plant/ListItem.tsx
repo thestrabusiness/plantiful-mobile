@@ -5,7 +5,7 @@ import { NavigationProps } from "../Router";
 import { Plant } from "../../api/Types";
 import ImageWithIndicator from "../shared/ImageWithIndicator";
 
-import { Layout } from "../../styles";
+import { Layout, Outline } from "../../styles";
 
 interface Props extends NavigationProps {
   plant: Plant;
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   plantItemImage: {
-    borderRadius: 15,
+    borderRadius: Outline.borderRadiusAvatar,
     height: gridItemDimension,
     width: gridItemDimension,
   },

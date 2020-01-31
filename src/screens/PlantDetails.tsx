@@ -20,27 +20,28 @@ import Header from "../components/shared/Header";
 import LoadingMessage from "../components/Plant/LoadingMessage";
 import useDidFocus from "../useDidFocus";
 
-import { Layout, Spacing } from "../styles";
+import { Layout, Spacing, Outline } from "../styles";
 
 const styles = StyleSheet.create({
-  pageContainer: {
-    paddingHorizontal: Spacing.base,
+  checkInHeader: {
+    fontSize: 18,
+    marginVertical: Spacing.base,
   },
   detailsContainer: {
     alignItems: "center",
     height: Layout.screenHeight * 0.33,
     justifyContent: "space-around",
   },
-  plantName: {
-    fontSize: 24,
+  pageContainer: {
+    paddingHorizontal: Spacing.base,
   },
   plantImage: {
+    borderRadius: Outline.borderRadiusAvatar,
     height: Layout.screenWidth * 0.5,
     width: Layout.screenWidth * 0.5,
   },
-  checkInHeader: {
-    fontSize: 18,
-    marginVertical: Spacing.base,
+  plantName: {
+    fontSize: 24,
   },
 });
 
