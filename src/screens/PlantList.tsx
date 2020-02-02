@@ -39,11 +39,12 @@ const styles = StyleSheet.create({
     width: Layout.screenWidth,
   },
   noPlantsMessageContainer: {
-    height: "100%",
-    justifyContent: "center",
-    paddingHorizontal: 10,
+    ...Layout.centeredContent,
   },
-  noPlantsMessageText: { fontSize: 18, textAlign: "center" },
+  noPlantsMessageText: {
+    fontSize: 18,
+    textAlign: "center",
+  },
 });
 
 const PlantList: FunctionComponent<NavigationProps> = ({ navigation }) => {

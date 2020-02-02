@@ -5,7 +5,7 @@ import { NavigationProps } from "../Router";
 import { Plant } from "../../api/Types";
 import ImageWithIndicator from "../shared/ImageWithIndicator";
 
-import { Layout, Outline, Shadow } from "../../styles";
+import { Layout, Outline, Shadow, Spacing } from "../../styles";
 
 interface Props extends NavigationProps {
   plant: Plant;
@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     width: gridItemDimension,
   },
   plantName: {
+    paddingVertical: Spacing.smaller,
     textAlign: "center",
     width: gridItemDimension,
   },

@@ -8,7 +8,7 @@ export const drawerWidth = 300;
 
 export const centeredContent = {
   alignItems: "center" as const,
-  height: screenHeight,
+  height: "100%",
   justifyContent: "center" as const,
   paddingHorizontal: 10,
 };
