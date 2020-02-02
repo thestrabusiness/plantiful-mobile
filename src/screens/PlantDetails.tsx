@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  Alert,
 } from "react-native";
 import Toast from "react-native-simple-toast";
 
@@ -49,6 +50,34 @@ const styles = StyleSheet.create({
     ...Shadow.dropShadowSharp,
   },
 });
+
+const showDeletePlantAlert = (
+  plantName: string,
+  plantId: number,
+  navigation: any,
+): void => {
+  Alert.alert(
+    "Are you sure?",
+    `This action will remove ${plantName} your garden.`,
+    [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Remove",
+        style: "destructive",
+        onPress: (): void => {
+          deletePlant(plantId).then(response => {
+            if (!response.error?.message) {
+              Toast.show(`${plantName} deleted`);
+              navigation.goBack();
+            } else {
+              handleError(response);
+            }
+          });
+        },
+      },
+    ],
+  );
+};
 
 const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [plant, setPlant] = useState<Plant>();
@@ -98,7 +127,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
     return <LoadingMessage />;
   }
 
-  if (plant) {
+  if (plant && plantName) {
     return (
       <Page>
         <Header title={plant.name} navigation={navigation} />
@@ -123,14 +152,7 @@ const PlantDetails: FunctionComponent<NavigationProps> = ({ navigation }) => {
             iconName="trashcan"
             iconSize={35}
             onPress={(): void => {
-              deletePlant(plantId).then(response => {
-                if (!response.error?.message) {
-                  Toast.show(`${plantName} deleted`);
-                  navigation.goBack();
-                } else {
-                  handleError(response);
-                }
-              });
+              showDeletePlantAlert(plantName, plantId, navigation);
             }}
           />
         </ActionButtonContainer>
