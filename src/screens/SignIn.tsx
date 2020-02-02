@@ -1,16 +1,12 @@
-import React, { useState } from "react";
-import { ReactElement } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { TextInput, StyleSheet, Button, Text, View } from "react-native";
-import { NavigationStackProp } from "react-navigation-stack";
 
 import { Page } from "../components/Page";
 import { onSignIn } from "../Session";
+import Header from "../components/shared/Header";
 
 import { Layout, Inputs, Spacing } from "../styles";
-
-interface Props {
-  navigation: NavigationStackProp;
-}
+import { NavigationProps } from "src/components/Router";
 
 const styles = StyleSheet.create({
   container: {
@@ -28,7 +24,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const BadSignInMessage = (): ReactElement => {
+const BadSignInMessage: FunctionComponent = () => {
   return (
     <Text style={styles.signInError}>
       Wrong combination of email and password
@@ -36,11 +32,10 @@ const BadSignInMessage = (): ReactElement => {
   );
 };
 
-const SignIn = (props: Props): ReactElement => {
+const SignIn: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [badSignIn, setBadSignIn] = useState(false);
-  const { navigation } = props;
 
   const resetBadSignIn = (): void => {
     if (badSignIn) {
@@ -49,51 +44,54 @@ const SignIn = (props: Props): ReactElement => {
   };
 
   return (
-    <Page style={styles.container}>
-      {badSignIn ? <BadSignInMessage /> : <></>}
-      <TextInput
-        style={styles.inputField}
-        placeholder={"Email"}
-        value={email}
-        onChangeText={(value: string): void => {
-          resetBadSignIn();
-          setEmail(value);
-        }}
-        autoCapitalize="none"
-        autoCompleteType="email"
-      />
-      <TextInput
-        style={styles.inputField}
-        placeholder={"Password"}
-        value={password}
-        onChangeText={(value: string): void => {
-          resetBadSignIn();
-          setPassword(value);
-        }}
-        autoCapitalize="none"
-        autoCompleteType="password"
-        secureTextEntry={true}
-      />
-      <Button
-        title="Sign In"
-        onPress={(): void => {
-          onSignIn(email, password).then((wasSignedIn: boolean) => {
-            if (wasSignedIn) {
-              navigation.navigate("SignedIn");
-            } else {
-              setBadSignIn(true);
-            }
-          });
-        }}
-      />
-      <View style={styles.section}>
-        <Text> Don&apos;t have an account yet? </Text>
+    <Page>
+      <Header title="Sign in to Plantiful" />
+      <View style={styles.container}>
+        {badSignIn ? <BadSignInMessage /> : <></>}
+        <TextInput
+          style={styles.inputField}
+          placeholder={"Email"}
+          value={email}
+          onChangeText={(value: string): void => {
+            resetBadSignIn();
+            setEmail(value);
+          }}
+          autoCapitalize="none"
+          autoCompleteType="email"
+        />
+        <TextInput
+          style={styles.inputField}
+          placeholder={"Password"}
+          value={password}
+          onChangeText={(value: string): void => {
+            resetBadSignIn();
+            setPassword(value);
+          }}
+          autoCapitalize="none"
+          autoCompleteType="password"
+          secureTextEntry={true}
+        />
         <Button
-          title="Sign Up"
+          title="Sign In"
           onPress={(): void => {
-            navigation.navigate("SignUp");
+            onSignIn(email, password).then((wasSignedIn: boolean) => {
+              if (wasSignedIn) {
+                navigation.navigate("SignedIn");
+              } else {
+                setBadSignIn(true);
+              }
+            });
           }}
         />
+        <View style={styles.section}>
+          <Text> Don&apos;t have an account yet? </Text>
+          <Button
+            title="Sign Up"
+            onPress={(): void => {
+              navigation.navigate("SignUp");
+            }}
+          />
+        </View>
       </View>
     </Page>
   );

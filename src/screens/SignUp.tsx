@@ -1,17 +1,13 @@
-import React, { useState } from "react";
-import { ReactElement } from "react";
-import { StyleSheet, Button, TextInput } from "react-native";
-import { NavigationStackProp } from "react-navigation-stack";
+import React, { FunctionComponent, useState } from "react";
+import { StyleSheet, Button, TextInput, View } from "react-native";
 import Toast from "react-native-simple-toast";
 
 import { Page } from "../components/Page";
 import { onSignUp } from "../Session";
 
 import { Layout, Inputs, Spacing } from "../styles";
-
-interface Props {
-  navigation: NavigationStackProp;
-}
+import Header from "../components/shared/Header";
+import { NavigationProps } from "../components/Router";
 
 const styles = StyleSheet.create({
   container: {
@@ -26,7 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const SignUp = (props: Props): ReactElement => {
+const SignUp: FunctionComponent<NavigationProps> = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
@@ -34,7 +30,6 @@ const SignUp = (props: Props): ReactElement => {
   const [lastName, setLastName] = useState("");
 
   const [badSignUp, setBadSignUp] = useState(false);
-  const { navigation } = props;
 
   const resetBadSignUp = (): void => {
     if (badSignUp) {
@@ -43,79 +38,82 @@ const SignUp = (props: Props): ReactElement => {
   };
 
   return (
-    <Page style={styles.container}>
-      <TextInput
-        style={styles.inputField}
-        placeholder={"First Name"}
-        value={firstName}
-        onChangeText={(value: string): void => {
-          resetBadSignUp();
-          setFirstName(value);
-        }}
-        autoCapitalize="none"
-        autoCompleteType="name"
-      />
-      <TextInput
-        style={styles.inputField}
-        placeholder={"Last Name"}
-        value={lastName}
-        onChangeText={(value: string): void => {
-          resetBadSignUp();
-          setLastName(value);
-        }}
-        autoCapitalize="none"
-        autoCompleteType="name"
-      />
-      <TextInput
-        style={styles.inputField}
-        placeholder={"Email"}
-        value={email}
-        onChangeText={(value: string): void => {
-          resetBadSignUp();
-          setEmail(value);
-        }}
-        autoCapitalize="none"
-        autoCompleteType="email"
-      />
-      <TextInput
-        style={styles.inputField}
-        placeholder={"Password"}
-        value={password}
-        onChangeText={(value: string): void => {
-          resetBadSignUp();
-          setPassword(value);
-        }}
-        autoCapitalize="none"
-        autoCompleteType="password"
-        secureTextEntry={true}
-      />
-      <TextInput
-        style={styles.inputField}
-        placeholder={"Confirm Password"}
-        value={passwordConfirmation}
-        onChangeText={(value: string): void => {
-          resetBadSignUp();
-          setPasswordConfirmation(value);
-        }}
-        autoCapitalize="none"
-        autoCompleteType="password"
-        secureTextEntry={true}
-      />
-      <Button
-        title="Sign Up"
-        onPress={(): void => {
-          onSignUp(firstName, lastName, email, password).then(
-            (successfulSignUp: boolean) => {
-              if (successfulSignUp) {
-                Toast.show("Welcome to Plantiful");
-                navigation.navigate("SignedIn");
-              } else {
-                setBadSignUp(true);
-              }
-            },
-          );
-        }}
-      />
+    <Page>
+      <Header navigation={navigation} title="Sign Up" />
+      <View style={styles.container}>
+        <TextInput
+          style={styles.inputField}
+          placeholder={"First Name"}
+          value={firstName}
+          onChangeText={(value: string): void => {
+            resetBadSignUp();
+            setFirstName(value);
+          }}
+          autoCapitalize="none"
+          autoCompleteType="name"
+        />
+        <TextInput
+          style={styles.inputField}
+          placeholder={"Last Name"}
+          value={lastName}
+          onChangeText={(value: string): void => {
+            resetBadSignUp();
+            setLastName(value);
+          }}
+          autoCapitalize="none"
+          autoCompleteType="name"
+        />
+        <TextInput
+          style={styles.inputField}
+          placeholder={"Email"}
+          value={email}
+          onChangeText={(value: string): void => {
+            resetBadSignUp();
+            setEmail(value);
+          }}
+          autoCapitalize="none"
+          autoCompleteType="email"
+        />
+        <TextInput
+          style={styles.inputField}
+          placeholder={"Password"}
+          value={password}
+          onChangeText={(value: string): void => {
+            resetBadSignUp();
+            setPassword(value);
+          }}
+          autoCapitalize="none"
+          autoCompleteType="password"
+          secureTextEntry={true}
+        />
+        <TextInput
+          style={styles.inputField}
+          placeholder={"Confirm Password"}
+          value={passwordConfirmation}
+          onChangeText={(value: string): void => {
+            resetBadSignUp();
+            setPasswordConfirmation(value);
+          }}
+          autoCapitalize="none"
+          autoCompleteType="password"
+          secureTextEntry={true}
+        />
+        <Button
+          title="Sign Up"
+          onPress={(): void => {
+            onSignUp(firstName, lastName, email, password).then(
+              (successfulSignUp: boolean) => {
+                if (successfulSignUp) {
+                  Toast.show("Welcome to Plantiful");
+                  navigation.navigate("SignedIn");
+                } else {
+                  setBadSignUp(true);
+                }
+              },
+            );
+          }}
+        />
+      </View>
     </Page>
   );
 };
